@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Cadastro.Core.Domain.Models;
 using Cadastro.Core.Domain.Services;
+using System;
 
 namespace Cadastro.API.Controllers
 {
@@ -23,34 +24,41 @@ namespace Cadastro.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Pessoa>>> GetPessoa()
         {
-            var pessoas = await _pessoaService.ObterAsync();
-            return pessoas.ToList();
+            try
+            {
+                var pessoas = await _pessoaService.ObterAsync();
+                return pessoas.ToList();
+            }
+            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
+            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
         }
 
         // GET: api/Pessoas/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Pessoa>> GetPessoa(int id)
+        [HttpGet("{pessoaId}")]
+        public async Task<ActionResult<Pessoa>> GetPessoa(int pessoaId)
         {
-            var tbPessoa = await _pessoaService.ObterAsync(id);
-
-            if (tbPessoa == null)
+            try
             {
-                return NotFound();
+                return await _pessoaService.ObterAsync(pessoaId);
             }
-
-            return tbPessoa;
+            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
+            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
         }
         #endregion
 
         #region PutPessoa
         // PUT: api/Pessoas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPessoa(int id, Pessoa pessoa)
+        [HttpPut("{pessoaId}")]
+        public async Task<IActionResult> PutPessoa(int pessoaId, Pessoa pessoa)
         {
-            await _pessoaService.UpdateAsync(pessoa);
-
-            return NoContent();
+            try
+            {
+                await _pessoaService.UpdateAsync(pessoa);
+                return NoContent();
+            }
+            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
+            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
         }
         #endregion
 
@@ -60,26 +68,28 @@ namespace Cadastro.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Pessoa>> PostPessoa(Pessoa pessoa)
         {
-            await _pessoaService.InsereAsync(pessoa);
-
-            return CreatedAtAction("GetPessoa", new { id = pessoa.PessoaId }, pessoa);
+            try
+            {
+                await _pessoaService.InsereAsync(pessoa);
+                return CreatedAtAction("GetPessoa", new { pessoaId = pessoa.PessoaId }, pessoa);
+            }
+            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
+            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
         }
         #endregion
 
         #region DeletePessoa
         // DELETE: api/Pessoas/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePessoa(int id)
+        [HttpDelete("{pessoaId}")]
+        public async Task<IActionResult> DeletePessoa(int pessoaId)
         {
-            var pessoa = await _pessoaService.ObterAsync(id);
-            if (pessoa == null)
+            try
             {
-                return NotFound();
+                await _pessoaService.RemoveAsync(pessoaId);
+                return NoContent();
             }
-
-            await _pessoaService.RemoveAsync(id);
-
-            return NoContent();
+            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
+            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
         }
         #endregion
     }

@@ -34,12 +34,12 @@ namespace Cadastro.API.Controllers
         }
 
         // GET: api/Filiais/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Filial>> GetFilial(long? id)
+        [HttpGet("{cgc}")]
+        public async Task<ActionResult<Filial>> GetFilial(long? cgc)
         {
             try
             {
-                var filial = await _filialService.ObterAsync(id);
+                var filial = await _filialService.ObterAsync(cgc);
                 if (filial == null)
                 {
                     return NotFound();
@@ -51,22 +51,6 @@ namespace Cadastro.API.Controllers
         }
         #endregion
 
-        //#region PutFilial
-        //// PUT: api/Filiais/5
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutFilial(long? id, Filial filial)
-        //{
-        //    try
-        //    {
-        //        await _filialService.UpdateAsync(id, filial);
-        //        return NoContent();
-        //    }
-        //    catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-        //    catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
-        //}
-        //#endregion
-
         #region PostFilial
         // POST: api/Filiais
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -76,7 +60,7 @@ namespace Cadastro.API.Controllers
             try
             {
                 await _filialService.InsereAsync(filial);
-                return CreatedAtAction("GetFilial", new { id = filial.Cgc }, filial);
+                return CreatedAtAction("GetFilial", new { cgc = filial.Cgc }, filial);
             }
             catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
             catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
@@ -85,12 +69,12 @@ namespace Cadastro.API.Controllers
 
         #region DeleteFilial
         // DELETE: api/Filiais/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFilial(long? id)
+        [HttpDelete("{cgc}")]
+        public async Task<IActionResult> DeleteFilial(long? cgc)
         {
             try
             {
-                await _filialService.RemoveAsync(id);
+                await _filialService.RemoveAsync(cgc);
                 return NoContent();
             }
             catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }

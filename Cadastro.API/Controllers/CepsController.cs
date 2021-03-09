@@ -34,14 +34,14 @@ namespace Cadastro.API.Controllers
         }
 
         // GET: api/Ceps/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Cep>> GetCep(long? id)
+        [HttpGet("{cep}")]
+        public async Task<ActionResult<Cep>> GetCep(long? cep)
         {
             try
             {
-                var cep = await _cepService.ObterAsync(id);
-                if (cep == null) return NotFound();
-                return cep;
+                var CEP = await _cepService.ObterAsync(cep);
+                if (CEP == null) return NotFound();
+                return CEP;
             }
             catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
             catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }

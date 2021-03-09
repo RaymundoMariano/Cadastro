@@ -25,21 +25,12 @@ namespace Cadastro.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cadastro.API", Version = "v1" });
             });
-
-            //services.AddDbContext<CadastroContext>(options =>
-            //{
-            //    options.UseInMemoryDatabase("loja-api-in-memory");
-            //});
-
-            //services.AddDbContext<CadastroContext>(options =>
-            //        options.UseSqlServer("Server=DESKTOP-S3R5UB7\\SQLEXPRESS;Database=DesBd_CADUN;Trusted_Connection=True;"));
 
             // injeção dependência DBContext			
             services.AddDbContext<CadastroContext>(options =>
@@ -59,12 +50,6 @@ namespace Cadastro.API
             services.AddScoped<IPessoaFisicaService, PessoaFisicaService>();
             services.AddScoped<IFilialRepository, FilialRepository>();
             services.AddScoped<IFilialService, FilialService>();
-
-            //injeção dependência Services
-            //services.AddTransient<IPessoaService, PessoaService>();
-            //services.AddTransient<IPessoaRepository, PessoaRepository>();
-            //services.AddTransient<ICepService, CepService>();
-            //services.AddTransient<ICepRepository, CepRepository>();
 
             //injeção de dependência NewsoftJson - Microsoft.AspNetCore.Mvc.NewtonsoftJson
             services.AddControllers()
