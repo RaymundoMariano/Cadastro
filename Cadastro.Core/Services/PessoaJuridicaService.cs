@@ -1,4 +1,5 @@
-﻿using Cadastro.Core.Domain.Models;
+﻿using Acessorio.Util;
+using Cadastro.Core.Domain.Models;
 using Cadastro.Core.Domain.Repositories;
 using Cadastro.Core.Domain.Services;
 using Microsoft.EntityFrameworkCore;
@@ -34,11 +35,13 @@ namespace Cadastro.Core.Services
         {
             try
             {
+                if (!Validacao.CNPJValido(cgc.ToString()))
+                    throw new ServiceException("CGC inválido - " + cgc);
+
                 var pessoaJuridica = await _pessoaJuridicaRepository.ObterAsync(cgc);
                 if (pessoaJuridica == null)
-                {
-                    throw new ServiceException("PessoaJuridica não cadastrada - " + cgc);
-                }
+                    throw new ServiceException("Pessoa jurídica não cadastrada - " + cgc);
+
                 return pessoaJuridica;
             }
             catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
@@ -51,7 +54,10 @@ namespace Cadastro.Core.Services
         {
             try
             {
-                if(pessoaJuridica.Socio != null)
+                if (!Validacao.CNPJValido(pessoaJuridica.Cgc.ToString()))
+                    throw new ServiceException("CGC inválido - " + pessoaJuridica.Cgc);
+
+                if (pessoaJuridica.Socio != null)
                 {
                     foreach(var socio in pessoaJuridica.Socio)
                     {

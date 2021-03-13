@@ -1,4 +1,5 @@
-﻿using Cadastro.Core.Domain.Models;
+﻿using Acessorio.Util;
+using Cadastro.Core.Domain.Models;
 using Cadastro.Core.Domain.Repositories;
 using Cadastro.Core.Domain.Services;
 using System;
@@ -27,11 +28,12 @@ namespace Cadastro.Core.Services
         {
             try
             {
+                if (!Validacao.CPFValido(cpf.ToString()))
+                    throw new ServiceException("CPF inválido - " + cpf);
+
                 var pessoaFisica = await _pessoaFisicaRepository.ObterAsync(cpf);
                 if (pessoaFisica == null)
-                {
                     throw new ServiceException("Pessoa fisica não cadastrada - " + cpf);
-                }
                 return pessoaFisica;
             }
             catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using Acessorio.Util;
 
 namespace Cadastro.Core.Services
 {
@@ -28,8 +29,8 @@ namespace Cadastro.Core.Services
         {
             try
             {
-                if (cep.ToString().Length != 8)
-                    throw new ServiceException(cep + " <- Cep deve conter 8 caracteres numericos!");
+                if (!Validacao.CEPValido(cep))
+                    throw new ServiceException("Cep inválido - " + cep);
 
                 var Cep = await _cepRepository.ObterAsync(cep);
                 if (Cep != null)
@@ -61,9 +62,13 @@ namespace Cadastro.Core.Services
         {
             try
             {
+                if (!Validacao.CEPValido(cep.CEP))
+                    throw new ServiceException("Cep inválido - " + cep.CEP);
+
                 _cepRepository.Insere(cep);
                 await _cepRepository.UnitOfWork.SaveChangesAsync();
             }
+            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
             catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
         }
         #endregion

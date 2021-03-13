@@ -32,9 +32,7 @@ namespace Cadastro.Core.Services
             {
                 var pessoa = await _pessoaRepository.ObterAsync(pessoaId);
                 if (pessoa == null)
-                {
                     throw new ServiceException("Pessoa não cadastrada - " + pessoaId);
-                }
                 return pessoa;
             }
             catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
