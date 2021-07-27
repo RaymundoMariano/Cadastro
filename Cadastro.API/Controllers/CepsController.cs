@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Cadastro.Core.Domain.Models;
-using Cadastro.Core.Domain.Services;
 using System;
+using Cadastro.Domain.Contracts.Services;
+using Cadastro.Domain.Aplication.Responses;
+using Cadastro.Domain.Enums;
+using AutoMapper;
+using Cadastro.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cadastro.API.Controllers
 {
@@ -13,38 +16,66 @@ namespace Cadastro.API.Controllers
     public class CepsController : ControllerBase
     {
         private readonly ICepService _cepService;
-
-        public CepsController(ICepService cepService)
+        private readonly IMapper _mapper;
+        public CepsController(ICepService cepService, IMapper mapper)
         {
             _cepService = cepService;
+            _mapper = mapper;
         }
 
         #region GetCep
         // GET: api/Ceps
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cep>>> GetCep()
+        [AllowAnonymous]
+        public async Task<ActionResult<ResultResponse>> GetCep()
         {
             try
             {
                 var ceps = await _cepService.ObterAsync();
-                return ceps.ToList();
+                return (new ResultResponse()
+                {
+                    Succeeded = true,
+                    ObjectRetorno = _mapper.Map<List<CepModel>>(ceps),
+                    ObjectResult = (int)EObjectResult.OK,
+                    Errors = new List<string>()
+                });
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
         }
 
         // GET: api/Ceps/5
         [HttpGet("{cep}")]
-        public async Task<ActionResult<Cep>> GetCep(long? cep)
+        [AllowAnonymous]
+        public async Task<ActionResult<ResultResponse>> GetCep(string cep)
         {
             try
             {
-                var CEP = await _cepService.ObterAsync(cep);
-                if (CEP == null) return NotFound();
-                return CEP;
+                var Cep = await _cepService.ObterAsync(cep);
+                return (new ResultResponse()
+                {
+                    Succeeded = true,
+                    ObjectRetorno = _mapper.Map<CepModel>(Cep),
+                    ObjectResult = (int)EObjectResult.OK,
+                    Errors = new List<string>()
+                });
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
+            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+        }
+        #endregion
+
+        #region Erro
+        private ActionResult<ResultResponse> Erro(ETipoErro erro, string mensagem)
+        {
+            return (new ResultResponse()
+            {
+                Succeeded = false,
+                ObjectRetorno = null,
+                ObjectResult = (erro == ETipoErro.Fatal)
+                    ? (int)EObjectResult.ErroFatal : (int)EObjectResult.BadRequest,
+                Errors = (mensagem == null)
+                    ? new List<string>() : new List<string> { mensagem }
+            });
         }
         #endregion
     }

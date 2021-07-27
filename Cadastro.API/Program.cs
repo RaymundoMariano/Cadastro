@@ -1,10 +1,10 @@
-using Cadastro.Core.Persistence.Contexts;
+using Cadastro.Data.EFC;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Cadastro.API
+namespace Cadastro1.API
 {
     public class Program
     {
@@ -12,7 +12,7 @@ namespace Cadastro.API
         {
             var host = BuildWebHost(args);
             using (var scope = host.Services.CreateScope())
-            using (var context = scope.ServiceProvider.GetService<CadastroContext>())
+            using (var context = scope.ServiceProvider.GetService<CadastroContextEFC>())
             {
                 context.Database.EnsureCreated();
             }

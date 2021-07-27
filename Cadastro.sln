@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30803.129
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadastro.API", "Cadastro.API\Cadastro.API.csproj", "{41E682F2-23EF-4849-8A41-BBE45D43DFD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadastro.Data", "Cadastro.Data\Cadastro.Data.csproj", "{CAFE1D48-45BA-49C2-B619-CBEDFF1AFC84}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadastro.Core", "Cadastro.Core\Cadastro.Core.csproj", "{CFB78D77-78B4-455A-8C45-A03C77C034AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadastro.Service", "Cadastro.Service\Cadastro.Service.csproj", "{1B184D8E-7B05-4BE5-BE1B-D6E086EC469F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadastro.Domain", "Cadastro.Domain\Cadastro.Domain.csproj", "{DD2CC073-D3D9-494A-9130-59DED752415C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadastro.API", "Cadastro.API\Cadastro.API.csproj", "{CB757CF2-51BB-4E39-A7CD-0423DBEFB852}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +17,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{41E682F2-23EF-4849-8A41-BBE45D43DFD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{41E682F2-23EF-4849-8A41-BBE45D43DFD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{41E682F2-23EF-4849-8A41-BBE45D43DFD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{41E682F2-23EF-4849-8A41-BBE45D43DFD8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CFB78D77-78B4-455A-8C45-A03C77C034AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFB78D77-78B4-455A-8C45-A03C77C034AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFB78D77-78B4-455A-8C45-A03C77C034AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFB78D77-78B4-455A-8C45-A03C77C034AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAFE1D48-45BA-49C2-B619-CBEDFF1AFC84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAFE1D48-45BA-49C2-B619-CBEDFF1AFC84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAFE1D48-45BA-49C2-B619-CBEDFF1AFC84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAFE1D48-45BA-49C2-B619-CBEDFF1AFC84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B184D8E-7B05-4BE5-BE1B-D6E086EC469F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B184D8E-7B05-4BE5-BE1B-D6E086EC469F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B184D8E-7B05-4BE5-BE1B-D6E086EC469F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B184D8E-7B05-4BE5-BE1B-D6E086EC469F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD2CC073-D3D9-494A-9130-59DED752415C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD2CC073-D3D9-494A-9130-59DED752415C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD2CC073-D3D9-494A-9130-59DED752415C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD2CC073-D3D9-494A-9130-59DED752415C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB757CF2-51BB-4E39-A7CD-0423DBEFB852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB757CF2-51BB-4E39-A7CD-0423DBEFB852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB757CF2-51BB-4E39-A7CD-0423DBEFB852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB757CF2-51BB-4E39-A7CD-0423DBEFB852}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
