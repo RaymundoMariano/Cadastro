@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using Cadastro.Domain.Contracts.Services;
-using Cadastro.Domain.Entities;
 using AutoMapper;
-using Cadastro.Domain.Aplication.Responses;
-using Cadastro.Domain.Enums;
-using Cadastro.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using Cadastro.Domain.Contracts.Services;
+using Cadastro.Domain.Aplication.Responses;
+using Cadastro.Domain.Models;
+using Cadastro.Domain.Enums;
+using Cadastro.Domain.Entities;
 using Acessorio.Util;
 
 namespace Cadastro.API.Controllers
@@ -20,6 +20,7 @@ namespace Cadastro.API.Controllers
         private readonly IPessoaService _pessoaService;
         private readonly IEnderecoPessoaService _enderecoPessoaService;
         private readonly IMapper _mapper;
+
         public PessoasController(IPessoaService pessoaService
             , IEnderecoPessoaService enderecoPessoaService
             , IMapper mapper)

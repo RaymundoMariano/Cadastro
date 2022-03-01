@@ -20,7 +20,7 @@ namespace Cadastro.API.Controllers
         private readonly IMapper _mapper;
         public FiliaisController(IFilialService filialService, IMapper mapper)
         {
-            _filialService = filialService;
+            _filialService = filialService ?? throw new ArgumentNullException(nameof(filialService));
             _mapper = mapper;
         }
 

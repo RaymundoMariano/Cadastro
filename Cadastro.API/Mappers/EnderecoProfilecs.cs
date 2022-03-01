@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Cadastro.Domain.Models;
 using Cadastro.Domain.Entities;
+using Cadastro.Domain.Models;
 
 namespace Cadastro.API.Mappers
 {

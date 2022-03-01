@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Aplication.Responses;
-using Cadastro.Domain.Enums;
-using AutoMapper;
 using Cadastro.Domain.Models;
-using Microsoft.AspNetCore.Authorization;
+using Cadastro.Domain.Enums;
 
 namespace Cadastro.API.Controllers
 {
