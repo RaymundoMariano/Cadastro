@@ -25,7 +25,7 @@ namespace Cadastro.Services
             {
                 return await _cepRepository.ObterAsync(); 
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
 
         public async Task<Cep> ObterAsync(string cep)
@@ -57,8 +57,8 @@ namespace Cadastro.Services
                 }
                 return Cep;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch(Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -73,8 +73,8 @@ namespace Cadastro.Services
                 _cepRepository.Insere(cep);
                 await _cepRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
     }

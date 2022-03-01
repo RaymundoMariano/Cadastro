@@ -16,7 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-namespace Cadastro1.API
+namespace Cadastro.API
 {
     public class Startup
     {

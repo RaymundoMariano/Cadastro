@@ -28,7 +28,7 @@ namespace Cadastro.Services
 
                 return pfs;
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
 
         public async Task<PessoaFisica> ObterAsync(string cpf)
@@ -47,8 +47,8 @@ namespace Cadastro.Services
                 pf.Cpf = Formate.CPF(pf.Cpf);
                 return pf;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -65,8 +65,8 @@ namespace Cadastro.Services
                 _pessoaFisicaRepository.Insere(pf);
                 await _pessoaFisicaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -82,10 +82,9 @@ namespace Cadastro.Services
                 _pessoaFisicaRepository.Remove(pf);
                 await _pessoaFisicaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
-        }
-        
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
+        }        
         #endregion
     }
 }

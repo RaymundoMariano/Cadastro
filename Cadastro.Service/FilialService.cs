@@ -5,7 +5,6 @@ using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cadastro.Services
@@ -32,7 +31,7 @@ namespace Cadastro.Services
 
                 return filiais;
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
 
         public async Task<Filial> ObterAsync(int filialId)
@@ -46,8 +45,8 @@ namespace Cadastro.Services
                 filial.Cgc = Formate.CGC(filial.Cgc);
                 return filial;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
 
         public async Task<Filial> ObterAsync(string cgc)
@@ -63,8 +62,8 @@ namespace Cadastro.Services
                 filial.Cgc = Formate.CGC(filial.Cgc);
                 return filial;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -85,8 +84,8 @@ namespace Cadastro.Services
                 _filialRepository.Insere(filial);
                 await _filialRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -102,8 +101,8 @@ namespace Cadastro.Services
                 _filialRepository.Update(filial);
                 await _filialRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -119,8 +118,8 @@ namespace Cadastro.Services
                 _filialRepository.Remove(filial);
                 await _filialRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion        
     }

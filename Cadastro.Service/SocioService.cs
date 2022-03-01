@@ -23,7 +23,7 @@ namespace Cadastro.Services
             { 
                 return await _socioRepository.ObterAsync();
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
 
         public async Task<Socio> ObterAsync(int id)
@@ -35,8 +35,8 @@ namespace Cadastro.Services
                     $"Id informado {id} não foi encontrado");
                 return socio;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -48,8 +48,8 @@ namespace Cadastro.Services
                 _socioRepository.Insere(socio);
                 await _socioRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -64,8 +64,8 @@ namespace Cadastro.Services
                 _socioRepository.Update(socio);
                 await _socioRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -78,8 +78,8 @@ namespace Cadastro.Services
                 _socioRepository.Remove(socio);
                 await _socioRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
     }

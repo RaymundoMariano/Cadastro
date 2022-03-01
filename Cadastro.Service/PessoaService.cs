@@ -28,7 +28,7 @@ namespace Cadastro.Services
             {
                 return await FormateCPF(_pessoaRepository.GetPessoasSemVinculos(empresaId));
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -39,7 +39,7 @@ namespace Cadastro.Services
             {
                 return await FormateCPF(await _pessoaRepository.GetFullAsync());
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
 
         public async Task<Pessoa> ObterAsync(int pessoaId)
@@ -55,8 +55,8 @@ namespace Cadastro.Services
 
                 return pessoa;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -78,7 +78,7 @@ namespace Cadastro.Services
                 }
                 await _pessoaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -105,8 +105,8 @@ namespace Cadastro.Services
                 _pessoaRepository.Update(pessoa);
                 await _pessoaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -127,8 +127,8 @@ namespace Cadastro.Services
                 _pessoaRepository.Remove(pessoa);
                 await _pessoaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 

@@ -26,7 +26,7 @@ namespace Cadastro.Services
             { 
                 return await _enderecoRepository.GetFullAsync();
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
 
         public async Task<Endereco> ObterAsync(int enderecoId)
@@ -38,8 +38,8 @@ namespace Cadastro.Services
                     $"Endereco com Id {enderecoId} não foi encontrado");
                 return endereco;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -58,8 +58,8 @@ namespace Cadastro.Services
                 _enderecoRepository.Insere(endereco);
                 await _enderecoRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -78,8 +78,8 @@ namespace Cadastro.Services
                 _enderecoRepository.Update(endereco);
                 await _enderecoRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -92,7 +92,7 @@ namespace Cadastro.Services
                 _enderecoRepository.Remove(endereco);
                 await _enderecoRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
         #endregion
 

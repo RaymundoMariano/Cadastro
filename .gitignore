@@ -886,3 +886,17 @@ Cadastro.Serrvice/obj/Debug/net5.0/Cadastro.Serrvice.csproj.FileListAbsolute.txt
 Cadastro.Service/obj/Debug/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs
 Cadastro.Service/obj/Debug/net5.0/Cadastro.Service.AssemblyInfo.cs
 Cadastro.Service/obj/Debug/net5.0/Cadastro.Service.csproj.FileListAbsolute.txt
+Cadastro.API/obj/Release/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs
+Cadastro.API/obj/Release/net5.0/Cadastro.API.AssemblyInfo.cs
+Cadastro.Data/obj/Debug/net5.0/CADUnico.Data.AssemblyInfo.cs
+Cadastro.Data/obj/Debug/net5.0/CADUnico.Data.csproj.FileListAbsolute.txt
+Cadastro.Data/obj/Release/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs
+Cadastro.Data/obj/Release/net5.0/Cadastro.Data.AssemblyInfo.cs
+Cadastro.Domain/obj/Debug/net5.0/CADUnico.Domain.AssemblyInfo.cs
+Cadastro.Domain/obj/Debug/net5.0/CADUnico.Domain.csproj.FileListAbsolute.txt
+Cadastro.Domain/obj/Release/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs
+Cadastro.Domain/obj/Release/net5.0/Cadastro.Domain.AssemblyInfo.cs
+Cadastro.Service/obj/Debug/net5.0/CADUnico.Service.AssemblyInfo.cs
+Cadastro.Service/obj/Debug/net5.0/CADUnico.Service.csproj.FileListAbsolute.txt
+Cadastro.Service/obj/Release/net5.0/.NETCoreApp,Version=v5.0.AssemblyAttributes.cs
+Cadastro.Service/obj/Release/net5.0/Cadastro.Service.AssemblyInfo.cs

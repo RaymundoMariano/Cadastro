@@ -5,7 +5,6 @@ using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cadastro.Services
@@ -31,7 +30,7 @@ namespace Cadastro.Services
             {
                 return FormateCGC(await _empresaRepository.GetFullAsync());
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
 
         public async Task<Empresa> ObterAsync(int empresaId)
@@ -45,8 +44,8 @@ namespace Cadastro.Services
                 empresa.Cgc = Formate.CGC(empresa.Cgc);
                 return empresa;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
 
         public async Task<Empresa> ObterAsync(string cgc)
@@ -63,8 +62,8 @@ namespace Cadastro.Services
                 empresa.Cgc = Formate.CGC(empresa.Cgc);
                 return empresa;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -78,8 +77,8 @@ namespace Cadastro.Services
                 _empresaRepository.Insere(empresa);
                 await _empresaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -96,8 +95,8 @@ namespace Cadastro.Services
                 _empresaRepository.Update(empresa);
                 await _empresaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -115,8 +114,8 @@ namespace Cadastro.Services
 
                 await _empresaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -156,8 +155,8 @@ namespace Cadastro.Services
                 }
                 await _empresaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -179,8 +178,8 @@ namespace Cadastro.Services
 
                 return FormateCGC(empresas);
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -202,7 +201,7 @@ namespace Cadastro.Services
 
                 return await _pessoaService.FormateCPF(pessoas);
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
         #endregion
 

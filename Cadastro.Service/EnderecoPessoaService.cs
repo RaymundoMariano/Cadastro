@@ -1,5 +1,4 @@
-﻿using Acessorio.Util;
-using Cadastro.Domain.Contracts.Repositories;
+﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
@@ -31,7 +30,7 @@ namespace Cadastro.Services
             { 
                 return await _enderecoPessoaRepository.ObterAsync();
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
 
         public async Task<EnderecoPessoa> ObterAsync(int id)
@@ -43,8 +42,8 @@ namespace Cadastro.Services
                     $"Endereco pessoa com Id {id} não foi encontrado");
                 return ep;
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -56,8 +55,8 @@ namespace Cadastro.Services
                 _enderecoPessoaRepository.Insere(ep);
                 await _enderecoPessoaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -72,8 +71,8 @@ namespace Cadastro.Services
                 _enderecoPessoaRepository.Update(ep);
                 await _enderecoPessoaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -88,7 +87,7 @@ namespace Cadastro.Services
 
                 await _enderecoPessoaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (Exception) { throw; }
         }
         #endregion
 
@@ -134,8 +133,8 @@ namespace Cadastro.Services
                 }
                 await _enderecoPessoaRepository.UnitOfWork.SaveChangesAsync();
             }
-            catch (ServiceException ex) { throw new ServiceException(ex.Message, ex.InnerException); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex.InnerException); }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
     }
