@@ -5,11 +5,11 @@ using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Cadastro.Domain.Contracts.Services;
-using Cadastro.Domain.Aplication.Responses;
-using Cadastro.Domain.Models;
 using Cadastro.Domain.Enums;
 using Cadastro.Domain.Entities;
-using Acessorio.Util;
+using Cadastro.Domain.Models.Aplicacao;
+using Cadastro.Domain.Models.Response;
+using Cadastro.Service.Extensions;
 
 namespace Cadastro.API.Controllers
 {
@@ -34,7 +34,7 @@ namespace Cadastro.API.Controllers
         // GET: api/Pessoas
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetPessoa()
+        public async Task<ActionResult<ResultModel>> GetPessoa()
         {
             try
             {
@@ -47,11 +47,11 @@ namespace Cadastro.API.Controllers
                     foreach (var ep in pessoa.EnderecoPessoas)
                     {
                         ep.Endereco.TipoEndereco = ((ETipoEndereco)ep.Endereco.Tipo).ToString();
-                        ep.Endereco.CEP = Formate.CEP(ep.Endereco.CEP);
+                        ep.Endereco.CEP = ep.Endereco.CEP.FormateCEP();
                     }
                 }
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoasModel,
@@ -65,7 +65,7 @@ namespace Cadastro.API.Controllers
         // GET: api/Pessoas/5
         [HttpGet("{pessoaId}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetPessoa(int pessoaId)
+        public async Task<ActionResult<ResultModel>> GetPessoa(int pessoaId)
         {
             try
             {
@@ -76,10 +76,10 @@ namespace Cadastro.API.Controllers
                 foreach (var ep in pessoaModel.EnderecoPessoas)
                 {
                     ep.Endereco.TipoEndereco = ((ETipoEndereco)ep.Endereco.Tipo).ToString();
-                    ep.Endereco.CEP = Formate.CEP(ep.Endereco.CEP);
+                    ep.Endereco.CEP = ep.Endereco.CEP.FormateCEP();
                 }
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoaModel,
@@ -95,7 +95,7 @@ namespace Cadastro.API.Controllers
         // POST: api/Pessoas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ResultResponse>> PostPessoa(PessoaModel pessoaModel)
+        public async Task<ActionResult<ResultModel>> PostPessoa(PessoaModel pessoaModel)
         {
             try
             {
@@ -107,7 +107,7 @@ namespace Cadastro.API.Controllers
                 pessoaModel = _mapper.Map<PessoaModel>(pessoa);
                 CreatedAtAction("GetPessoa", new { pessoaId = pessoaModel.PessoaId }, pessoaModel);
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoaModel,
@@ -123,7 +123,7 @@ namespace Cadastro.API.Controllers
         // PUT: api/Pessoas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{pessoaId}")]
-        public async Task<ActionResult<ResultResponse>> PutPessoa(int pessoaId, PessoaModel pessoaModel)
+        public async Task<ActionResult<ResultModel>> PutPessoa(int pessoaId, PessoaModel pessoaModel)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace Cadastro.API.Controllers
                 pessoaModel = _mapper.Map<PessoaModel>(pessoa);
                 CreatedAtAction("GetPessoa", new { pessoaId = pessoaModel.PessoaId }, pessoaModel);
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoaModel,
@@ -151,13 +151,13 @@ namespace Cadastro.API.Controllers
         #region DeletePessoa
         // DELETE: api/Pessoas/5
         [HttpDelete("{pessoaId}")]
-        public async Task<ActionResult<ResultResponse>> DeletePessoa(int pessoaId)
+        public async Task<ActionResult<ResultModel>> DeletePessoa(int pessoaId)
         {
             try
             {
                 await _pessoaService.RemoveAsync(pessoaId);
                 NoContent();
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = null,
@@ -173,14 +173,14 @@ namespace Cadastro.API.Controllers
         #region PostEndereco
         [Route("PostEndereco")]
         [HttpPost]
-        public async Task<ActionResult<ResultResponse>> PostEndereco(int pessoaId, EnderecoModel enderecoModel)
+        public async Task<ActionResult<ResultModel>> PostEndereco(int pessoaId, EnderecoModel enderecoModel)
         {
             try
             {
                 var endereco = _mapper.Map<Endereco>(enderecoModel);
 
                 await _enderecoPessoaService.ManterAsync(pessoaId, endereco);
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<EnderecoModel>(endereco),
@@ -194,9 +194,9 @@ namespace Cadastro.API.Controllers
         #endregion
 
         #region Erro
-        private ActionResult<ResultResponse> Erro(ETipoErro erro, string mensagem)
+        private ActionResult<ResultModel> Erro(ETipoErro erro, string mensagem)
         {
-            return (new ResultResponse()
+            return (new ResultModel()
             {
                 Succeeded = false,
                 ObjectRetorno = null,

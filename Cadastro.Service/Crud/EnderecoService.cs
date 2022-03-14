@@ -1,12 +1,12 @@
-﻿using Acessorio.Util;
-using Cadastro.Domain.Contracts.Repositories;
+﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
+using Cadastro.Service.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cadastro.Services
+namespace Cadastro.Services.Crud
 {
     public class EnderecoService : IEnderecoService
     {
@@ -48,7 +48,7 @@ namespace Cadastro.Services
         {
             try
             {
-                endereco.CEP = Remove.Mascara(endereco.CEP);
+                endereco.CEP = endereco.CEP.RemoveMascara();
 
                 if (endereco.CEP != null)
                 {
@@ -68,7 +68,7 @@ namespace Cadastro.Services
         {
             try
             {
-                endereco.CEP = Remove.Mascara(endereco.CEP);
+                endereco.CEP = endereco.CEP.RemoveMascara();
 
                 if (enderecoId != endereco.EnderecoId) throw new ServiceException(
                    $"Id informado {enderecoId} é Diferente do Id d endereço {endereco.EnderecoId}");

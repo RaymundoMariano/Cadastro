@@ -13,10 +13,4 @@
     <ProjectReference Include="..\Cadastro.Domain\Cadastro.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Acessorio.Util">
-      <HintPath>..\..\Acessorio\Acessorio.Util\bin\Debug\net5.0\Acessorio.Util.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

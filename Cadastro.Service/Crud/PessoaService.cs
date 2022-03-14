@@ -1,13 +1,13 @@
-﻿using Acessorio.Util;
-using Cadastro.Domain.Contracts.Repositories;
+﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
+using Cadastro.Service.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cadastro.Services
+namespace Cadastro.Services.Crud
 {
     public class PessoaService : IPessoaService
     {
@@ -51,7 +51,7 @@ namespace Cadastro.Services
                     $"Pessoa com {pessoaId} não foi encontrada");
 
                 var pf = pessoa.PessoaFisicas.FirstOrDefault(pf => pf.PessoaId == pessoa.PessoaId);
-                if (pf != null) pessoa.Cpf = Formate.CPF(pf.Cpf);
+                if (pf != null) pessoa.Cpf = pf.Cpf.FormateCPF();
 
                 return pessoa;
             }
@@ -90,7 +90,7 @@ namespace Cadastro.Services
                 if (pessoaId != pessoa.PessoaId) throw new ServiceException(
                     $"Id informado {pessoaId} é Diferente do Id da pessoa {pessoa.PessoaId}");
 
-                pessoa.Cpf = Remove.Mascara(pessoa.Cpf);
+                pessoa.Cpf = pessoa.Cpf.RemoveMascara();
 
                 if (pessoa.Cpf != null
                     && pessoa.PessoaFisicas.FirstOrDefault(pf => pf.Cpf == pessoa.Cpf) == null)
@@ -141,7 +141,7 @@ namespace Cadastro.Services
 
                 if (pf == null) continue;
 
-                pessoa.Cpf = Formate.CPF(pf.Cpf);
+                pessoa.Cpf = pf.Cpf.FormateCPF();
             }
             return pessoas;
         }

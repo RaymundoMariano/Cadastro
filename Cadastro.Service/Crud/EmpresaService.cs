@@ -1,13 +1,13 @@
-﻿using Acessorio.Util;
-using Cadastro.Domain.Contracts.Repositories;
+﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
+using Cadastro.Service.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cadastro.Services
+namespace Cadastro.Services.Crud
 {
     public class EmpresaService : IEmpresaService
     {
@@ -41,7 +41,7 @@ namespace Cadastro.Services
                 if (empresa == null) throw new ServiceException(
                     $"Empresa com Id {empresaId} não foi encontrada");
                 
-                empresa.Cgc = Formate.CGC(empresa.Cgc);
+                empresa.Cgc = empresa.Cgc.FormateCGC();
                 return empresa;
             }
             catch (ServiceException) { throw; }
@@ -52,14 +52,14 @@ namespace Cadastro.Services
         {
             try
             {
-                if (!Validacao.CNPJValido(cgc)) throw new ServiceException(
+                if (!cgc.CNPJValido()) throw new ServiceException(
                     $"O CGC informado {cgc} é inválido");
 
-                var empresa = await _empresaRepository.GetFullAsync(Remove.Mascara(cgc));
+                var empresa = await _empresaRepository.GetFullAsync(cgc.RemoveMascara());
                 if (empresa == null) throw new ServiceException(
                     $"Empresa com CGC {cgc} não foi encontrada");
                 
-                empresa.Cgc = Formate.CGC(empresa.Cgc);
+                empresa.Cgc = empresa.Cgc.FormateCGC();
                 return empresa;
             }
             catch (ServiceException) { throw; }
@@ -72,7 +72,7 @@ namespace Cadastro.Services
         {
             try
             {
-                empresa.Cgc = Remove.Mascara(empresa.Cgc);
+                empresa.Cgc = empresa.Cgc.RemoveMascara();
 
                 _empresaRepository.Insere(empresa);
                 await _empresaRepository.UnitOfWork.SaveChangesAsync();
@@ -87,7 +87,7 @@ namespace Cadastro.Services
         {
             try
             {
-                empresa.Cgc = Remove.Mascara(empresa.Cgc);
+                empresa.Cgc = empresa.Cgc.RemoveMascara();
 
                 if (empresaId != empresa.EmpresaId) throw new ServiceException(
                     $"Id informado {empresaId} é Diferente do Id da empresa {empresa.EmpresaId}");
@@ -210,7 +210,7 @@ namespace Cadastro.Services
         {
             foreach (var empresa in empresas)
             {
-                empresa.Cgc = Formate.CGC(empresa.Cgc);
+                empresa.Cgc = empresa.Cgc.FormateCGC();
             }
             return empresas;
         }

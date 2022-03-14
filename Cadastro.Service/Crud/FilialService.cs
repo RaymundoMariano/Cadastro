@@ -1,13 +1,13 @@
-﻿using Acessorio.Util;
-using Cadastro.Domain.Contracts.Repositories;
+﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
+using Cadastro.Service.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cadastro.Services
+namespace Cadastro.Services.Crud
 {
     public class FilialService : IFilialService
     {
@@ -27,7 +27,7 @@ namespace Cadastro.Services
             {
                 var filiais = await _filialRepository.GetFullAsync();
 
-                foreach (var filial in filiais) { filial.Cgc = Formate.CGC(filial.Cgc); }
+                foreach (var filial in filiais) { filial.Cgc = filial.Cgc.FormateCGC(); }
 
                 return filiais;
             }
@@ -42,7 +42,7 @@ namespace Cadastro.Services
                 if (filial == null) throw new ServiceException(
                     $"Empresa com Id {filialId} não foi encontrada");
 
-                filial.Cgc = Formate.CGC(filial.Cgc);
+                filial.Cgc = filial.Cgc.FormateCGC();
                 return filial;
             }
             catch (ServiceException) { throw; }
@@ -53,13 +53,13 @@ namespace Cadastro.Services
         {
             try
             {
-                cgc = Remove.Mascara(cgc);
+                cgc = cgc.FormateCGC();
 
                 var filial = await _filialRepository.GetFullAsync(cgc);
                 if (filial == null) throw new ServiceException(
                     $"Empresa com Cgc {cgc} não foi encontrada");
 
-                filial.Cgc = Formate.CGC(filial.Cgc);
+                filial.Cgc = filial.Cgc.FormateCGC();
                 return filial;
             }
             catch (ServiceException) { throw; }
@@ -80,7 +80,7 @@ namespace Cadastro.Services
                 if (empresa.Tipo == (int)ETipoEmpresa.Filial) throw new ServiceException(
                     $"A empresa com CGC {filial.Cgc} é filial! Não pode ser registrada como matriz");
 
-                filial.Cgc = Remove.Mascara(filial.Cgc);
+                filial.Cgc = filial.Cgc.RemoveMascara();
                 _filialRepository.Insere(filial);
                 await _filialRepository.UnitOfWork.SaveChangesAsync();
             }
@@ -97,7 +97,7 @@ namespace Cadastro.Services
                 if (filialId != filial.FilialId) throw new ServiceException(
                     $"Id informado {filialId} é Diferente do Id da empresa {filial.FilialId}");
 
-                filial.Cgc = Remove.Mascara(filial.Cgc);
+                filial.Cgc = filial.Cgc.RemoveMascara();
                 _filialRepository.Update(filial);
                 await _filialRepository.UnitOfWork.SaveChangesAsync();
             }
@@ -113,7 +113,7 @@ namespace Cadastro.Services
             {
                 var filial = await ObterAsync(filialId);
 
-                filial.Cgc = Remove.Mascara(filial.Cgc);
+                filial.Cgc = filial.Cgc.RemoveMascara();
 
                 _filialRepository.Remove(filial);
                 await _filialRepository.UnitOfWork.SaveChangesAsync();

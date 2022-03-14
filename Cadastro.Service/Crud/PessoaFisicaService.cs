@@ -1,12 +1,12 @@
-﻿using Acessorio.Util;
-using Cadastro.Domain.Contracts.Repositories;
+﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
+using Cadastro.Service.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cadastro.Services
+namespace Cadastro.Services.Crud
 {
     public class PessoaFisicaService : IPessoaFisicaService
     {
@@ -24,7 +24,7 @@ namespace Cadastro.Services
             { 
                 var pfs = await _pessoaFisicaRepository.GetFullAsync();
 
-                foreach (var pf in pfs) { pf.Cpf = Formate.CPF(pf.Cpf); }
+                foreach (var pf in pfs) { pf.Cpf = pf.Cpf.FormateCPF(); }
 
                 return pfs;
             }
@@ -35,16 +35,16 @@ namespace Cadastro.Services
         {
             try
             {
-                cpf = Remove.Mascara(cpf);
+                cpf = cpf.RemoveMascara();
 
-                if (!Validacao.CPFValido(cpf)) throw new ServiceException(
+                if (!cpf.CPFValido()) throw new ServiceException(
                     $"CPF inválido - {cpf}");
 
                 var pf = await _pessoaFisicaRepository.GetFullAsync(cpf);
                 if (pf == null) throw new ServiceException(
                     $"CPF informado {cpf} não foi encontrado");
 
-                pf.Cpf = Formate.CPF(pf.Cpf);
+                pf.Cpf = pf.Cpf.FormateCPF();
                 return pf;
             }
             catch (ServiceException) { throw; }
@@ -57,9 +57,9 @@ namespace Cadastro.Services
         {
             try
             {
-                pf.Cpf = Remove.Mascara(pf.Cpf);
+                pf.Cpf = pf.Cpf.RemoveMascara();
 
-                if (!Validacao.CPFValido(pf.Cpf)) throw new ServiceException(
+                if (!pf.Cpf.CPFValido()) throw new ServiceException(
                     $"CPF inválido - {pf.Cpf}");
 
                 _pessoaFisicaRepository.Insere(pf);
@@ -77,7 +77,7 @@ namespace Cadastro.Services
             {
                 var pf = await ObterAsync(cpf);
 
-                pf.Cpf = Remove.Mascara(pf.Cpf);
+                pf.Cpf = pf.Cpf.RemoveMascara();
 
                 _pessoaFisicaRepository.Remove(pf);
                 await _pessoaFisicaRepository.UnitOfWork.SaveChangesAsync();

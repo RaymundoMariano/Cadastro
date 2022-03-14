@@ -5,9 +5,9 @@ using System.Linq;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Entities;
-using Acessorio.Util;
+using Cadastro.Service.Extensions;
 
-namespace Cadastro.Services
+namespace Cadastro.Services.Crud
 {
     public class CepService : ICepService
     {
@@ -32,9 +32,9 @@ namespace Cadastro.Services
         {
             try
             {
-                cep = Remove.Mascara(cep);
+                cep = cep.RemoveMascara();
 
-                if (!Validacao.CEPValido(cep))
+                if (!cep.CEPValido())
                     throw new ServiceException($"Cep inválido - { cep }");
 
                 var Cep = await _cepRepository.ObterAsync(cep);
@@ -67,7 +67,7 @@ namespace Cadastro.Services
         {
             try
             {
-                if (!Validacao.CEPValido(cep.CEP))
+                if (!cep.CEP.CEPValido())
                     throw new ServiceException($"Cep inválido - {cep.CEP}");
 
                 _cepRepository.Insere(cep);

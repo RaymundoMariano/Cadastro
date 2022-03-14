@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Cadastro.Domain.Models
+namespace Cadastro.Domain.Models.Aplicacao
 {
     public partial class PessoaFisicaModel
     {

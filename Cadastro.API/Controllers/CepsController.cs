@@ -5,9 +5,9 @@ using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Cadastro.Domain.Contracts.Services;
-using Cadastro.Domain.Aplication.Responses;
-using Cadastro.Domain.Models;
 using Cadastro.Domain.Enums;
+using Cadastro.Domain.Models.Aplicacao;
+using Cadastro.Domain.Models.Response;
 
 namespace Cadastro.API.Controllers
 {
@@ -27,12 +27,12 @@ namespace Cadastro.API.Controllers
         // GET: api/Ceps
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetCep()
+        public async Task<ActionResult<ResultModel>> GetCep()
         {
             try
             {
                 var ceps = await _cepService.ObterAsync();
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<List<CepModel>>(ceps),
@@ -46,12 +46,12 @@ namespace Cadastro.API.Controllers
         // GET: api/Ceps/5
         [HttpGet("{cep}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetCep(string cep)
+        public async Task<ActionResult<ResultModel>> GetCep(string cep)
         {
             try
             {
                 var Cep = await _cepService.ObterAsync(cep);
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<CepModel>(Cep),
@@ -65,9 +65,9 @@ namespace Cadastro.API.Controllers
         #endregion
 
         #region Erro
-        private ActionResult<ResultResponse> Erro(ETipoErro erro, string mensagem)
+        private ActionResult<ResultModel> Erro(ETipoErro erro, string mensagem)
         {
-            return (new ResultResponse()
+            return (new ResultModel()
             {
                 Succeeded = false,
                 ObjectRetorno = null,

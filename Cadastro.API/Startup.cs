@@ -2,7 +2,7 @@ using Cadastro.Data.EFC;
 using Cadastro.Data.EFC.Repositories;
 using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
-using Cadastro.Services;
+using Cadastro.Services.Crud;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;

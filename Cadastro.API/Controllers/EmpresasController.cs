@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Cadastro.Domain.Aplication.Responses;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
-using Cadastro.Domain.Models;
+using Cadastro.Domain.Models.Aplicacao;
+using Cadastro.Domain.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +28,7 @@ namespace Cadastro.API.Controllers
         // GET: api/Empresas
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetEmpresa()
+        public async Task<ActionResult<ResultModel>> GetEmpresa()
         {
             try
             {
@@ -41,7 +41,7 @@ namespace Cadastro.API.Controllers
                     empresa.TipoEmpresa = ((ETipoEmpresa)empresa.Tipo).ToString();
                 }
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = empresasModel,
@@ -55,7 +55,7 @@ namespace Cadastro.API.Controllers
         // GET: api/Empresas/5
         [HttpGet("{empresaId}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetEmpresa(int empresaId)
+        public async Task<ActionResult<ResultModel>> GetEmpresa(int empresaId)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Cadastro.API.Controllers
 
                 empresaModel.TipoEmpresa = ((ETipoEmpresa)empresaModel.Tipo).ToString();
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = empresaModel,
@@ -82,7 +82,7 @@ namespace Cadastro.API.Controllers
         // POST: api/Empresas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ResultResponse>> PostEmpresa(EmpresaModel empresaModel)
+        public async Task<ActionResult<ResultModel>> PostEmpresa(EmpresaModel empresaModel)
         {
             try
             {
@@ -94,7 +94,7 @@ namespace Cadastro.API.Controllers
                 empresaModel = _mapper.Map<EmpresaModel>(empresa);
                 CreatedAtAction("GetEmpresa", new { empresaId = empresaModel.EmpresaId }, empresaModel);
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = empresaModel,
@@ -111,7 +111,7 @@ namespace Cadastro.API.Controllers
         // PUT: api/Empresas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{empresaId}")]
-        public async Task<ActionResult<ResultResponse>> PutEmpresa(int empresaId, EmpresaModel empresaModel)
+        public async Task<ActionResult<ResultModel>> PutEmpresa(int empresaId, EmpresaModel empresaModel)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace Cadastro.API.Controllers
                 empresaModel = _mapper.Map<EmpresaModel>(empresa);
                 CreatedAtAction("GetEmpresa", new { empresaId = empresaModel.EmpresaId }, empresaModel);
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = empresaModel,
@@ -139,13 +139,13 @@ namespace Cadastro.API.Controllers
         #region DeleteEmpresa
         // DELETE: api/Empresas/5
         [HttpDelete("{empresaId}")]
-        public async Task<ActionResult<ResultResponse>> DeleteEmpresa(int empresaId)
+        public async Task<ActionResult<ResultModel>> DeleteEmpresa(int empresaId)
         {
             try
             {
                 await _empresaService.RemoveAsync(empresaId);
                 NoContent();
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = null,
@@ -162,7 +162,7 @@ namespace Cadastro.API.Controllers
         [Route("GetFiliais")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetFiliais(int empresaId)
+        public async Task<ActionResult<ResultModel>> GetFiliais(int empresaId)
         {
             try
             {
@@ -175,7 +175,7 @@ namespace Cadastro.API.Controllers
                     empresa.TipoEmpresa = ((ETipoEmpresa)empresa.Tipo).ToString();
                 }
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = empresasModel,
@@ -192,12 +192,12 @@ namespace Cadastro.API.Controllers
         [Route("GetSocios")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetSocios(int empresaId)
+        public async Task<ActionResult<ResultModel>> GetSocios(int empresaId)
         {
             try
             {
                 var pessoas = await _empresaService.GetSocios(empresaId);
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<List<PessoaModel>>(pessoas),
@@ -213,14 +213,14 @@ namespace Cadastro.API.Controllers
         #region PostEndereco
         [Route("PostEndereco")]
         [HttpPost]
-        public async Task<ActionResult<ResultResponse>> PostEndereco(int empresaId, EnderecoModel enderecoModel)
+        public async Task<ActionResult<ResultModel>> PostEndereco(int empresaId, EnderecoModel enderecoModel)
         {
             try
             {
                 var endereco = _mapper.Map<Endereco>(enderecoModel);
 
                 await _empresaService.ManterEnderecoAsync(empresaId, endereco);
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<EnderecoModel>(endereco),
@@ -234,9 +234,9 @@ namespace Cadastro.API.Controllers
         #endregion
 
         #region Erro
-        private ActionResult<ResultResponse> Erro(ETipoErro erro, string mensagem)
+        private ActionResult<ResultModel> Erro(ETipoErro erro, string mensagem)
         {
-            return (new ResultResponse()
+            return (new ResultModel()
             {
                 Succeeded = false,
                 ObjectRetorno = null,

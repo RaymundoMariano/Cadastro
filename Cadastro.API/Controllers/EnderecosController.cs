@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Cadastro.Domain.Aplication.Responses;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
-using Cadastro.Domain.Models;
+using Cadastro.Domain.Models.Aplicacao;
+using Cadastro.Domain.Models.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +28,7 @@ namespace Cadastro.API.Controllers
         // GET: api/Enderecos
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetEndereco()
+        public async Task<ActionResult<ResultModel>> GetEndereco()
         {
             try
             {
@@ -41,7 +41,7 @@ namespace Cadastro.API.Controllers
                     endereco.TipoEndereco = ((ETipoEndereco)endereco.Tipo).ToString();
                 }
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = enderecosModel,
@@ -55,7 +55,7 @@ namespace Cadastro.API.Controllers
         // GET: api/Enderecos/5
         [HttpGet("{enderecoId}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultResponse>> GetEndereco(int enderecoId)
+        public async Task<ActionResult<ResultModel>> GetEndereco(int enderecoId)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Cadastro.API.Controllers
 
                 enderecoModel.TipoEndereco = ((ETipoEndereco)enderecoModel.Tipo).ToString();
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = enderecoModel,
@@ -82,7 +82,7 @@ namespace Cadastro.API.Controllers
         // POST: api/Enderecos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ResultResponse>> PostEndereco(EnderecoModel enderecoModel)
+        public async Task<ActionResult<ResultModel>> PostEndereco(EnderecoModel enderecoModel)
         {
             try
             {
@@ -94,7 +94,7 @@ namespace Cadastro.API.Controllers
                 enderecoModel = _mapper.Map<EnderecoModel>(endereco);
                 CreatedAtAction("GetEndereco", new { enderecoId = enderecoModel.EnderecoId }, enderecoModel);
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = enderecoModel,
@@ -111,7 +111,7 @@ namespace Cadastro.API.Controllers
         // PUT: api/Enderecos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{enderecoId}")]
-        public async Task<ActionResult<ResultResponse>> PutEndereco(int enderecoId, EnderecoModel enderecoModel)
+        public async Task<ActionResult<ResultModel>> PutEndereco(int enderecoId, EnderecoModel enderecoModel)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace Cadastro.API.Controllers
                 enderecoModel = _mapper.Map<EnderecoModel>(endereco);
                 CreatedAtAction("GetEndereco", new { enderecoId = enderecoModel.EnderecoId }, enderecoModel);
 
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = enderecoModel,
@@ -139,13 +139,13 @@ namespace Cadastro.API.Controllers
         #region DeleteEndereco
         // DELETE: api/Enderecos/5
         [HttpDelete("{enderecoId}")]
-        public async Task<ActionResult<ResultResponse>> DeleteEndereco(int enderecoId)
+        public async Task<ActionResult<ResultModel>> DeleteEndereco(int enderecoId)
         {
             try
             {
                 await _enderecoService.RemoveAsync(enderecoId);
                 NoContent();
-                return (new ResultResponse()
+                return (new ResultModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = null,
@@ -159,9 +159,9 @@ namespace Cadastro.API.Controllers
         #endregion
 
         #region Erro
-        private ActionResult<ResultResponse> Erro(ETipoErro erro, string mensagem)
+        private ActionResult<ResultModel> Erro(ETipoErro erro, string mensagem)
         {
-            return (new ResultResponse()
+            return (new ResultModel()
             {
                 Succeeded = false,
                 ObjectRetorno = null,

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Cadastro.Domain.Aplication.Responses
+namespace Cadastro.Domain.Models.Response
 {
-    public class ResultResponse
+    public class ResultModel
     {
         public bool Succeeded { get; set; }
         public object ObjectRetorno { get; set; }        

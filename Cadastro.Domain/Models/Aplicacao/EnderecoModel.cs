@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Cadastro.Domain.Models
+namespace Cadastro.Domain.Models.Aplicacao
 {
     public partial class EnderecoModel : _Model
     {
