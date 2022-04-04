@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
-using Cadastro.Domain.Enums;
+using Cadastro.Domain.Extensions;
 using Cadastro.Domain.Models.Aplicacao;
 using Cadastro.Domain.Models.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -28,40 +28,44 @@ namespace Cadastro.API.Controllers
         // GET: api/Filiais
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultModel>> GetFilial()
+        public async Task<ActionResult<ResponseModel>> GetFilial()
         {
             try
             {
-                var filiais = await _filialService.ObterAsync();
-                return (new ResultModel()
+                var filiais = _mapper.Map<List<FilialModel>>(await _filialService.ObterAsync());
+
+                foreach(var filial in filiais) { filial.Cgc = filial.Cgc.FormateCGC(); }
+
+                return (new ResponseModel()
                 {
                     Succeeded = true,
-                    ObjectRetorno = _mapper.Map<List<FilialModel>>(filiais),
-                    ObjectResult = (int)EObjectResult.OK,
+                    ObjectRetorno = filiais,
                     Errors = new List<string>()
                 });
             }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (Exception) { return Erro(null); }
         }
 
         // GET: api/Filiais/5
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultModel>> GetFilial(int id)
+        public async Task<ActionResult<ResponseModel>> GetFilial(int id)
         {
             try
             {
                 var filial = await _filialService.ObterAsync(id);
-                return (new ResultModel()
+
+                filial.Cgc = filial.Cgc.FormateCGC();
+
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<FilialModel>(filial),
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
@@ -69,62 +73,62 @@ namespace Cadastro.API.Controllers
         // POST: api/Filiais
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ResultModel>> PostFilial(FilialModel filialModel)
+        public async Task<ActionResult<ResponseModel>> PostFilial(FilialModel filialModel)
         {
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 var filial = _mapper.Map<Filial>(filialModel);
+
+                filial.Cgc = filial.Cgc.RemoveMascara();
+
                 await _filialService.InsereAsync(filial);
 
-                filialModel = _mapper.Map<FilialModel>(filial);
+                filial.Cgc = filial.Cgc.FormateCGC();
+
                 CreatedAtAction("GetFilial", new { filialId = filialModel.FilialId }, filialModel);
 
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
-                    ObjectRetorno = filialModel,
-                    ObjectResult = (int)EObjectResult.OK,
+                    ObjectRetorno = _mapper.Map<FilialModel>(filial),
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
         #region DeleteFilial
         // DELETE: api/Filiais/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ResultModel>> DeleteFilial(int id)
+        public async Task<ActionResult<ResponseModel>> DeleteFilial(int id)
         {
             try
             {
                 await _filialService.RemoveAsync(id);
                 NoContent();
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = null,
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
         #region Erro
-        private ActionResult<ResultModel> Erro(ETipoErro erro, string mensagem)
+        private ActionResult<ResponseModel> Erro(string mensagem)
         {
-            return (new ResultModel()
+            return (new ResponseModel()
             {
-                Succeeded = false,
+                Succeeded = mensagem == null ? false : true,
                 ObjectRetorno = null,
-                ObjectResult = (erro == ETipoErro.Fatal)
-                    ? (int)EObjectResult.ErroFatal : (int)EObjectResult.BadRequest,
                 Errors = (mensagem == null)
                     ? new List<string>() : new List<string> { mensagem }
             });

@@ -1,4 +1,4 @@
-﻿namespace Cadastro.Service.Extensions
+﻿namespace Cadastro.Domain.Extensions
 {
     public static class RemoveExtensions
     {

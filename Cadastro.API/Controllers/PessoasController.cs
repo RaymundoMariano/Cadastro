@@ -9,7 +9,7 @@ using Cadastro.Domain.Enums;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Models.Aplicacao;
 using Cadastro.Domain.Models.Response;
-using Cadastro.Service.Extensions;
+using Cadastro.Domain.Extensions;
 
 namespace Cadastro.API.Controllers
 {
@@ -34,7 +34,7 @@ namespace Cadastro.API.Controllers
         // GET: api/Pessoas
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultModel>> GetPessoa()
+        public async Task<ActionResult<ResponseModel>> GetPessoa()
         {
             try
             {
@@ -49,23 +49,23 @@ namespace Cadastro.API.Controllers
                         ep.Endereco.TipoEndereco = ((ETipoEndereco)ep.Endereco.Tipo).ToString();
                         ep.Endereco.CEP = ep.Endereco.CEP.FormateCEP();
                     }
+                    foreach (var pf in pessoa.PessoaFisicas) { pessoa.Cpf = pf.Cpf.FormateCPF(); }
                 }
 
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoasModel,
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (Exception) { return Erro(null); }
         }
 
         // GET: api/Pessoas/5
         [HttpGet("{pessoaId}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultModel>> GetPessoa(int pessoaId)
+        public async Task<ActionResult<ResponseModel>> GetPessoa(int pessoaId)
         {
             try
             {
@@ -73,21 +73,22 @@ namespace Cadastro.API.Controllers
 
                 var pessoaModel = _mapper.Map<PessoaModel>(pessoa);
 
+                foreach(var pf in pessoaModel.PessoaFisicas) { pessoaModel.Cpf = pf.Cpf.FormateCPF(); }
+
                 foreach (var ep in pessoaModel.EnderecoPessoas)
                 {
                     ep.Endereco.TipoEndereco = ((ETipoEndereco)ep.Endereco.Tipo).ToString();
                     ep.Endereco.CEP = ep.Endereco.CEP.FormateCEP();
                 }
 
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoaModel,
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
@@ -95,27 +96,30 @@ namespace Cadastro.API.Controllers
         // POST: api/Pessoas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ResultModel>> PostPessoa(PessoaModel pessoaModel)
+        public async Task<ActionResult<ResponseModel>> PostPessoa(PessoaModel pessoaModel)
         {
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 var pessoa = _mapper.Map<Pessoa>(pessoaModel);
+
+                pessoa.Cpf.RemoveMascara();
+
                 await _pessoaService.InsereAsync(pessoa);
 
-                pessoaModel = _mapper.Map<PessoaModel>(pessoa);
+                pessoa.Cpf.FormateCPF();
+
                 CreatedAtAction("GetPessoa", new { pessoaId = pessoaModel.PessoaId }, pessoaModel);
 
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
-                    ObjectRetorno = pessoaModel,
-                    ObjectResult = (int)EObjectResult.OK,
+                    ObjectRetorno = _mapper.Map<PessoaModel>(pessoa),
                     Errors = new List<string>()
                 });
             }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
@@ -123,85 +127,87 @@ namespace Cadastro.API.Controllers
         // PUT: api/Pessoas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{pessoaId}")]
-        public async Task<ActionResult<ResultModel>> PutPessoa(int pessoaId, PessoaModel pessoaModel)
+        public async Task<ActionResult<ResponseModel>> PutPessoa(int pessoaId, PessoaModel pessoaModel)
         {
             try
             {
                 if (pessoaId != pessoaModel.PessoaId) return BadRequest();
 
                 var pessoa = _mapper.Map<Pessoa>(pessoaModel);
+
+                pessoa.Cpf = pessoa.Cpf.RemoveMascara();
+
                 await _pessoaService.UpdateAsync(pessoaId, pessoa);
 
-                pessoaModel = _mapper.Map<PessoaModel>(pessoa);
                 CreatedAtAction("GetPessoa", new { pessoaId = pessoaModel.PessoaId }, pessoaModel);
 
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoaModel,
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
         #region DeletePessoa
         // DELETE: api/Pessoas/5
         [HttpDelete("{pessoaId}")]
-        public async Task<ActionResult<ResultModel>> DeletePessoa(int pessoaId)
+        public async Task<ActionResult<ResponseModel>> DeletePessoa(int pessoaId)
         {
             try
             {
                 await _pessoaService.RemoveAsync(pessoaId);
                 NoContent();
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = null,
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
         #region PostEndereco
         [Route("PostEndereco")]
         [HttpPost]
-        public async Task<ActionResult<ResultModel>> PostEndereco(int pessoaId, EnderecoModel enderecoModel)
+        public async Task<ActionResult<ResponseModel>> PostEndereco(int pessoaId, EnderecoModel enderecoModel)
         {
             try
             {
                 var endereco = _mapper.Map<Endereco>(enderecoModel);
 
+                endereco.CEP = endereco.CEP.RemoveMascara();
+
                 await _enderecoPessoaService.ManterAsync(pessoaId, endereco);
-                return (new ResultModel()
+
+                endereco.CEP = endereco.CEP.FormateCEP();
+
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<EnderecoModel>(endereco),
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
         #region Erro
-        private ActionResult<ResultModel> Erro(ETipoErro erro, string mensagem)
+        private ActionResult<ResponseModel> Erro(string mensagem)
         {
-            return (new ResultModel()
+            return (new ResponseModel()
             {
-                Succeeded = false,
+                Succeeded = mensagem == null ? false : true,
                 ObjectRetorno = null,
-                ObjectResult = (erro == ETipoErro.Fatal)
-                    ? (int)EObjectResult.ErroFatal : (int)EObjectResult.BadRequest,
                 Errors = (mensagem == null)
                     ? new List<string>() : new List<string> { mensagem }
             });

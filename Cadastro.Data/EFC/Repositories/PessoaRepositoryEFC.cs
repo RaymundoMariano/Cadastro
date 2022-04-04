@@ -2,7 +2,6 @@
 using Cadastro.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
@@ -20,6 +19,7 @@ namespace Cadastro.Data.EFC.Repositories
                     .AsNoTracking()
                     .Include(p => p.PessoaFisicas)
                         .ThenInclude(p => p.Socios)
+                            .ThenInclude(e => e.Empresa)
                     .Include(p => p.EnderecoPessoas)
                         .ThenInclude(p => p.Endereco)
                     .ToListAsync();
@@ -31,21 +31,11 @@ namespace Cadastro.Data.EFC.Repositories
                     .AsNoTracking()
                     .Include(p => p.PessoaFisicas)
                         .ThenInclude(p => p.Socios)
+                            .ThenInclude(e => e.Empresa)
                     .Include(p => p.EnderecoPessoas)
                         .ThenInclude(p => p.Endereco)
                     .FirstOrDefaultAsync(p => p.PessoaId == pessoaId);
         }
-        #endregion
-
-        #region GetPessoasSemVinculos
-        public IEnumerable<Pessoa> GetPessoasSemVinculos(int empresaId)
-        {
-            return _cadastroContext.Pessoas.ToList()
-                .Where(p => _cadastroContext.Socios.All(s => 
-                    s.EmpresaId != empresaId &&
-                    s.PessoaFisica.PessoaId != p.PessoaId))
-                .ToList();
-        }
-        #endregion
+        #endregion        
     }
 }

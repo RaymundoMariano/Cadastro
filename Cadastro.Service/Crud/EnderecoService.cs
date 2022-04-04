@@ -1,7 +1,7 @@
 ﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
-using Cadastro.Service.Extensions;
+using Cadastro.Domain.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -48,8 +48,6 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                endereco.CEP = endereco.CEP.RemoveMascara();
-
                 if (endereco.CEP != null)
                 {
                     var cep = await _cepService.ObterAsync(endereco.CEP);
@@ -68,8 +66,6 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                endereco.CEP = endereco.CEP.RemoveMascara();
-
                 if (enderecoId != endereco.EnderecoId) throw new ServiceException(
                    $"Id informado {enderecoId} é Diferente do Id d endereço {endereco.EnderecoId}");
 

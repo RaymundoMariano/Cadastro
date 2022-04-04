@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Cadastro.Service.Extensions
+namespace Cadastro.Domain.Extensions
 {
     public static class ValidateExtensions
     {

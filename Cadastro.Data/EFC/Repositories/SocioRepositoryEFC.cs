@@ -1,8 +1,6 @@
 ﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
@@ -11,6 +9,17 @@ namespace Cadastro.Data.EFC.Repositories
     {
         public SocioRepositoryEFC(CadastroContextEFC cadastroContext) : base(cadastroContext)
         {
-        }        
+        }
+
+        #region GetFullAsync
+        public async Task<Socio> GetFullAsync(int empresaId, string cpf)
+        {
+            return await _cadastroContext.Socios
+                    .AsNoTracking()
+                    .Include(s => s.PessoaFisica)
+                        .ThenInclude(s => s.Pessoa)
+                    .FirstOrDefaultAsync(s => s.EmpresaId == empresaId && s.Cpf == cpf);
+        }
+        #endregion
     }
 }

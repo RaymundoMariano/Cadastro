@@ -5,9 +5,9 @@ using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Cadastro.Domain.Contracts.Services;
-using Cadastro.Domain.Enums;
 using Cadastro.Domain.Models.Aplicacao;
 using Cadastro.Domain.Models.Response;
+using Cadastro.Domain.Extensions;
 
 namespace Cadastro.API.Controllers
 {
@@ -27,52 +27,54 @@ namespace Cadastro.API.Controllers
         // GET: api/Ceps
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultModel>> GetCep()
+        public async Task<ActionResult<ResponseModel>> GetCep()
         {
             try
             {
                 var ceps = await _cepService.ObterAsync();
-                return (new ResultModel()
+
+                foreach(var cep in ceps) { cep.CEP = cep.CEP.FormateCEP(); }
+
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<List<CepModel>>(ceps),
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (Exception) { return Erro(null); }
         }
 
         // GET: api/Ceps/5
         [HttpGet("{cep}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultModel>> GetCep(string cep)
+        public async Task<ActionResult<ResponseModel>> GetCep(string cep)
         {
             try
             {
-                var Cep = await _cepService.ObterAsync(cep);
-                return (new ResultModel()
+                var Cep = await _cepService.ObterAsync(cep.RemoveMascara());
+
+                Cep.CEP = Cep.CEP.FormateCEP();
+
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<CepModel>(Cep),
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
         #region Erro
-        private ActionResult<ResultModel> Erro(ETipoErro erro, string mensagem)
+        private ActionResult<ResponseModel> Erro(string mensagem)
         {
-            return (new ResultModel()
+            return (new ResponseModel()
             {
-                Succeeded = false,
+                Succeeded = mensagem == null ? false : true,
                 ObjectRetorno = null,
-                ObjectResult = (erro == ETipoErro.Fatal)
-                    ? (int)EObjectResult.ErroFatal : (int)EObjectResult.BadRequest,
                 Errors = (mensagem == null)
                     ? new List<string>() : new List<string> { mensagem }
             });

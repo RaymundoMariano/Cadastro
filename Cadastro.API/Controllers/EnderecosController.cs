@@ -5,6 +5,7 @@ using AutoMapper;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
+using Cadastro.Domain.Extensions;
 using Cadastro.Domain.Models.Aplicacao;
 using Cadastro.Domain.Models.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +29,7 @@ namespace Cadastro.API.Controllers
         // GET: api/Enderecos
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultModel>> GetEndereco()
+        public async Task<ActionResult<ResponseModel>> GetEndereco()
         {
             try
             {
@@ -39,23 +40,23 @@ namespace Cadastro.API.Controllers
                 foreach (var endereco in enderecosModel)
                 {
                     endereco.TipoEndereco = ((ETipoEndereco)endereco.Tipo).ToString();
+                    endereco.CEP = endereco.CEP.FormateCEP();
                 }
 
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = enderecosModel,
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (Exception) { return Erro(null); }
         }
 
         // GET: api/Enderecos/5
         [HttpGet("{enderecoId}")]
         [AllowAnonymous]
-        public async Task<ActionResult<ResultModel>> GetEndereco(int enderecoId)
+        public async Task<ActionResult<ResponseModel>> GetEndereco(int enderecoId)
         {
             try
             {
@@ -63,18 +64,19 @@ namespace Cadastro.API.Controllers
 
                 var enderecoModel = _mapper.Map<EnderecoModel>(endereco);
 
+                enderecoModel.CEP = enderecoModel.CEP.FormateCEP();
+
                 enderecoModel.TipoEndereco = ((ETipoEndereco)enderecoModel.Tipo).ToString();
 
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = enderecoModel,
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
@@ -82,28 +84,31 @@ namespace Cadastro.API.Controllers
         // POST: api/Enderecos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ResultModel>> PostEndereco(EnderecoModel enderecoModel)
+        public async Task<ActionResult<ResponseModel>> PostEndereco(EnderecoModel enderecoModel)
         {
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 var endereco = _mapper.Map<Endereco>(enderecoModel);
+
+                endereco.CEP = endereco.CEP.RemoveMascara();
+
                 await _enderecoService.InsereAsync(endereco);
 
-                enderecoModel = _mapper.Map<EnderecoModel>(endereco);
+                endereco.CEP = endereco.CEP.FormateCEP();
+
                 CreatedAtAction("GetEndereco", new { enderecoId = enderecoModel.EnderecoId }, enderecoModel);
 
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
-                    ObjectRetorno = enderecoModel,
-                    ObjectResult = (int)EObjectResult.OK,
+                    ObjectRetorno = _mapper.Map<EnderecoModel>(endereco),
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
@@ -111,62 +116,60 @@ namespace Cadastro.API.Controllers
         // PUT: api/Enderecos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{enderecoId}")]
-        public async Task<ActionResult<ResultModel>> PutEndereco(int enderecoId, EnderecoModel enderecoModel)
+        public async Task<ActionResult<ResponseModel>> PutEndereco(int enderecoId, EnderecoModel enderecoModel)
         {
             try
             {
                 if (enderecoId != enderecoModel.EnderecoId) return BadRequest();
 
                 var endereco = _mapper.Map<Endereco>(enderecoModel);
+
+                endereco.CEP = endereco.CEP.RemoveMascara();
+
                 await _enderecoService.UpdateAsync(enderecoId, endereco);
 
-                enderecoModel = _mapper.Map<EnderecoModel>(endereco);
                 CreatedAtAction("GetEndereco", new { enderecoId = enderecoModel.EnderecoId }, enderecoModel);
 
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = enderecoModel,
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion        
 
         #region DeleteEndereco
         // DELETE: api/Enderecos/5
         [HttpDelete("{enderecoId}")]
-        public async Task<ActionResult<ResultModel>> DeleteEndereco(int enderecoId)
+        public async Task<ActionResult<ResponseModel>> DeleteEndereco(int enderecoId)
         {
             try
             {
                 await _enderecoService.RemoveAsync(enderecoId);
                 NoContent();
-                return (new ResultModel()
+                return (new ResponseModel()
                 {
                     Succeeded = true,
                     ObjectRetorno = null,
-                    ObjectResult = (int)EObjectResult.OK,
                     Errors = new List<string>()
                 });
             }
-            catch (ServiceException ex) { return Erro(ETipoErro.Sistema, ex.Message); }
-            catch (Exception) { return Erro(ETipoErro.Fatal, null); }
+            catch (ServiceException ex) { return Erro(ex.Message); }
+            catch (Exception) { return Erro(null); }
         }
         #endregion
 
         #region Erro
-        private ActionResult<ResultModel> Erro(ETipoErro erro, string mensagem)
+        private ActionResult<ResponseModel> Erro(string mensagem)
         {
-            return (new ResultModel()
+            return (new ResponseModel()
             {
-                Succeeded = false,
+                Succeeded = mensagem == null ? false : true,
                 ObjectRetorno = null,
-                ObjectResult = (erro == ETipoErro.Fatal)
-                    ? (int)EObjectResult.ErroFatal : (int)EObjectResult.BadRequest,
                 Errors = (mensagem == null)
                     ? new List<string>() : new List<string> { mensagem }
             });

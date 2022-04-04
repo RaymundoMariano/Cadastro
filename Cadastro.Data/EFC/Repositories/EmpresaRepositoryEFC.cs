@@ -21,6 +21,8 @@ namespace Cadastro.Data.EFC.Repositories
                     .AsNoTracking()
                     .Include(p => p.Endereco)
                     .Include(p => p.Socios)
+                        .ThenInclude(pf => pf.PessoaFisica)
+                            .ThenInclude(p => p.Pessoa)
                     .Include(p => p.Filiais)
                     .ToListAsync();
         }
@@ -31,6 +33,8 @@ namespace Cadastro.Data.EFC.Repositories
                     .AsNoTracking()
                     .Include(p => p.Endereco)
                     .Include(p => p.Socios)
+                        .ThenInclude(pf => pf.PessoaFisica)
+                            .ThenInclude(p => p.Pessoa)
                     .Include(p => p.Filiais)
                     .FirstAsync(p => p.EmpresaId == empresaId);
         }
@@ -41,6 +45,8 @@ namespace Cadastro.Data.EFC.Repositories
                     .AsNoTracking()
                     .Include(p => p.Endereco)
                     .Include(p => p.Socios)
+                        .ThenInclude(pf => pf.PessoaFisica)
+                            .ThenInclude(p => p.Pessoa)
                     .Include(p => p.Filiais)
                     .FirstAsync(p => p.Cgc == cgc);
         }
@@ -50,7 +56,7 @@ namespace Cadastro.Data.EFC.Repositories
         public IEnumerable<Empresa> GetFiliaisSemVinculos()
         {
             return _cadastroContext.Empresas.ToList()
-                .Where(e => _cadastroContext.Filiais.All(f => f.EmpresaId != e.EmpresaId)
+                .Where(e => _cadastroContext.Filiais.All(f => f.EmpresaId == e.EmpresaId)
                     && (ETipoEmpresa)e.Tipo == ETipoEmpresa.Filial)
                 .ToList();
         }

@@ -2,7 +2,6 @@
 using Cadastro.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
@@ -19,11 +18,6 @@ namespace Cadastro.Data.EFC.Repositories
             return await _cadastroContext.Filiais
                     .AsNoTracking()
                     .Include(p => p.Empresa)
-                        .ThenInclude(p => p.Filiais)
-                    .Include(p => p.Empresa)
-                        .ThenInclude(p => p.Socios)
-                    .Include(p => p.Empresa)
-                        .ThenInclude(p => p.Endereco)
                     .ToListAsync();
         }
 
@@ -32,11 +26,6 @@ namespace Cadastro.Data.EFC.Repositories
             return await _cadastroContext.Filiais
                     .AsNoTracking()
                     .Include(p => p.Empresa)
-                        .ThenInclude(p => p.Filiais)
-                    .Include(p => p.Empresa)
-                        .ThenInclude(p => p.Socios)
-                    .Include(p => p.Empresa)
-                        .ThenInclude(p => p.Endereco)
                     .FirstOrDefaultAsync(p => p.FilialId == filialId);
         }
 
@@ -45,11 +34,6 @@ namespace Cadastro.Data.EFC.Repositories
             return await _cadastroContext.Filiais
                     .AsNoTracking()
                     .Include(p => p.Empresa)
-                        .ThenInclude(p => p.Filiais)
-                    .Include(p => p.Empresa)
-                        .ThenInclude(p => p.Socios)
-                    .Include(p => p.Empresa)
-                        .ThenInclude(p => p.Endereco)
                     .FirstOrDefaultAsync(p => p.Cgc == cgc);
         }
         #endregion        

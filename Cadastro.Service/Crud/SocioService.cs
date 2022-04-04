@@ -38,6 +38,11 @@ namespace Cadastro.Services.Crud
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }
         }
+
+        public async Task<Socio> ObterAsync(int empresaId, string cpf)
+        {
+            return await _socioRepository.GetFullAsync(empresaId, cpf);
+        }
         #endregion
 
         #region InsereAsync
@@ -81,6 +86,6 @@ namespace Cadastro.Services.Crud
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }
         }
-        #endregion
+        #endregion        
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Cadastro.Domain.Models.Response
 {
-    public class ResultModel
+    public class ResponseModel
     {
         public bool Succeeded { get; set; }
         public object ObjectRetorno { get; set; }        

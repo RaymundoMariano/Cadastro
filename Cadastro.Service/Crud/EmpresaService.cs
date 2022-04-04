@@ -2,7 +2,7 @@
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
-using Cadastro.Service.Extensions;
+using Cadastro.Domain.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,14 +13,20 @@ namespace Cadastro.Services.Crud
     {
         private readonly IEmpresaRepository _empresaRepository;
         private readonly IEnderecoService _enderecoService;
-        private readonly IPessoaService _pessoaService;
+        private readonly ISocioService _socioService;
+        private readonly IPessoaFisicaService _pessoaFisicaService;
+        private readonly IFilialRepository _filialRepository;
         public EmpresaService(IEmpresaRepository empresaRepository
             , IEnderecoService enderecoService
-            , IPessoaService pessoaService)
+            , ISocioService socioService
+            , IPessoaFisicaService pessoaFisicaService
+            , IFilialRepository filialRepository)
         {
             _empresaRepository = empresaRepository;
             _enderecoService = enderecoService;
-            _pessoaService = pessoaService;
+            _socioService = socioService;
+            _pessoaFisicaService = pessoaFisicaService;
+            _filialRepository = filialRepository;
         }
 
         #region ObterAsync
@@ -28,7 +34,7 @@ namespace Cadastro.Services.Crud
         {
             try 
             {
-                return FormateCGC(await _empresaRepository.GetFullAsync());
+                return await _empresaRepository.GetFullAsync();
             }
             catch (Exception) { throw; }
         }
@@ -41,7 +47,6 @@ namespace Cadastro.Services.Crud
                 if (empresa == null) throw new ServiceException(
                     $"Empresa com Id {empresaId} não foi encontrada");
                 
-                empresa.Cgc = empresa.Cgc.FormateCGC();
                 return empresa;
             }
             catch (ServiceException) { throw; }
@@ -53,13 +58,12 @@ namespace Cadastro.Services.Crud
             try
             {
                 if (!cgc.CNPJValido()) throw new ServiceException(
-                    $"O CGC informado {cgc} é inválido");
+                    $"O CGC informado {cgc} é inválido!");
 
                 var empresa = await _empresaRepository.GetFullAsync(cgc.RemoveMascara());
                 if (empresa == null) throw new ServiceException(
-                    $"Empresa com CGC {cgc} não foi encontrada");
+                    $"Empresa com CGC {cgc} não foi encontrada!");
                 
-                empresa.Cgc = empresa.Cgc.FormateCGC();
                 return empresa;
             }
             catch (ServiceException) { throw; }
@@ -72,7 +76,8 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                empresa.Cgc = empresa.Cgc.RemoveMascara();
+                if (!empresa.Cgc.CNPJValido()) throw new ServiceException(
+                    $"O CGC informado {empresa.Cgc} é inválido!");
 
                 _empresaRepository.Insere(empresa);
                 await _empresaRepository.UnitOfWork.SaveChangesAsync();
@@ -87,10 +92,11 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                empresa.Cgc = empresa.Cgc.RemoveMascara();
-
                 if (empresaId != empresa.EmpresaId) throw new ServiceException(
                     $"Id informado {empresaId} é Diferente do Id da empresa {empresa.EmpresaId}");
+
+                if (!empresa.Cgc.CNPJValido()) throw new ServiceException(
+                    $"O CGC informado {empresa.Cgc} é inválido!");
 
                 _empresaRepository.Update(empresa);
                 await _empresaRepository.UnitOfWork.SaveChangesAsync();
@@ -160,29 +166,6 @@ namespace Cadastro.Services.Crud
         }
         #endregion
 
-        #region GetFiliais
-        public async Task<IEnumerable<Empresa>> GetFiliais(int empresaId)
-        {
-            try
-            {
-                var empresas = new List<Empresa>();
-
-                var empresa = await ObterAsync(empresaId);
-
-                foreach (var filial in empresa.Filiais) 
-                {
-                    empresas.Add(filial.Empresa);
-                }
-
-                empresas.AddRange(_empresaRepository.GetFiliaisSemVinculos());
-
-                return FormateCGC(empresas);
-            }
-            catch (ServiceException) { throw; }
-            catch (Exception) { throw; }
-        }
-        #endregion
-
         #region GetSocios
         public async Task<IEnumerable<Pessoa>> GetSocios(int empresaId)
         {
@@ -190,29 +173,130 @@ namespace Cadastro.Services.Crud
             {
                 var pessoas = new List<Pessoa>();
 
-                var empresa = await ObterAsync(empresaId);
+                var pfs = await _pessoaFisicaService.ObterAsync();
 
-                foreach (var socio in empresa.Socios)
+                foreach (var pf in pfs)
                 {
-                    pessoas.Add(socio.PessoaFisica.Pessoa);
+                    foreach (var socio in pf.Socios)
+                    {
+                        if (socio.EmpresaId == empresaId)
+                        {
+                            pf.Pessoa.Selected = true;
+                            break;
+                        }
+                        pf.Pessoa.Selected = false;
+                    }
+                    pessoas.Add(pf.Pessoa);
                 }
 
-                pessoas.AddRange(await _pessoaService.ObterSemVinculos(empresaId));
-
-                return await _pessoaService.FormateCPF(pessoas);
+                return pessoas;
             }
             catch (Exception) { throw; }
         }
         #endregion
 
-        #region FormateCGC
-        public IEnumerable<Empresa> FormateCGC(IEnumerable<Empresa> empresas)
+        #region ManterSociosAsync
+        public async Task ManterSociosAsync(int empresaId, List<Pessoa> pessoas)
         {
-            foreach (var empresa in empresas)
+            try
             {
-                empresa.Cgc = empresa.Cgc.FormateCGC();
+                foreach (var pessoa in pessoas)
+                {
+                    var socio = await _socioService.ObterAsync(empresaId, pessoa.Cpf);
+
+                    if (socio == null)
+                    {
+                        if (pessoa.Selected)
+                        {
+                            socio = (new Socio()
+                            {
+                                Cpf = pessoa.Cpf,
+                                EmpresaId = empresaId
+                            });
+                            await _socioService.InsereAsync(socio);
+                        }
+                    }
+                    else
+                    {                        
+                        if (!pessoa.Selected) { await _socioService.RemoveAsync(socio.SocioId); }
+                    }
+                }
             }
-            return empresas;
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
+        }
+        #endregion
+
+        #region GetFiliais
+        public async Task<IEnumerable<Filial>> GetFiliais(int empresaId)
+        {
+            try
+            {
+                var filiais = new List<Filial>();
+
+                var empresa = await ObterAsync(empresaId);
+
+                foreach (var filial in empresa.Filiais) 
+                {
+                    filial.Selected = true;
+                    filiais.Add(filial);
+                }
+
+                var empresas = _empresaRepository.GetFiliaisSemVinculos();
+
+                foreach (var emp in empresas)
+                {
+                    var filial = new Filial()
+                    {
+                        Cgc = emp.Cgc,
+                        EmpresaId = empresaId,
+                        Selected = false
+                    };
+
+                    filiais.Add(filial);
+                }
+
+                return filiais;
+            }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
+        }
+        #endregion        
+
+        #region ManterFiliaisAsync
+        public async Task ManterFiliaisAsync(int empresaId, List<Filial> filiais)
+        {
+            try
+            {
+                foreach (var empresa in filiais)
+                {
+                    var filial = await _filialRepository.GetFullAsync(empresa.Cgc);
+
+                    if (filial == null)
+                    {
+                        if (empresa.Selected)
+                        {
+                            filial = (new Filial()
+                            {
+                                Cgc = empresa.Cgc,
+                                EmpresaId = empresaId
+                            });
+                            _filialRepository.Insere(filial);
+                            _filialRepository.UnitOfWork.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        if (!empresa.Selected) 
+                        {
+                            _filialRepository.Remove(filial);
+                            _filialRepository.UnitOfWork.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (ServiceException) { throw; }
+            catch (Exception) { throw; }
         }
         #endregion
 

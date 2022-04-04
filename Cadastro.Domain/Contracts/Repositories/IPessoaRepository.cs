@@ -8,6 +8,5 @@ namespace Cadastro.Domain.Contracts.Repositories
     {
         Task<IEnumerable<Pessoa>> GetFullAsync();
         Task<Pessoa> GetFullAsync(int pessoaId);
-        IEnumerable<Pessoa> GetPessoasSemVinculos(int empesaId);
     }
 }

@@ -8,8 +8,9 @@ namespace Cadastro.Domain.Contracts.Services
     {
         Task<Empresa> ObterAsync(string cgc);
         Task ManterEnderecoAsync(int empresaId, Endereco endereco);
-        Task<IEnumerable<Empresa>> GetFiliais(int empresaId);
+        Task<IEnumerable<Filial>> GetFiliais(int empresaId);
+        Task ManterFiliaisAsync(int empresaId, List<Filial> filiais);
         Task<IEnumerable<Pessoa>> GetSocios(int empresaId);
-        IEnumerable<Empresa> FormateCGC(IEnumerable<Empresa> empresas);
+        Task ManterSociosAsync(int empresaId, List<Pessoa> pessoas);
     }
 }

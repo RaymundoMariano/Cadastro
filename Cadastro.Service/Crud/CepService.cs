@@ -5,7 +5,7 @@ using System.Linq;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Entities;
-using Cadastro.Service.Extensions;
+using Cadastro.Domain.Extensions;
 
 namespace Cadastro.Services.Crud
 {
@@ -32,8 +32,6 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                cep = cep.RemoveMascara();
-
                 if (!cep.CEPValido())
                     throw new ServiceException($"Cep inválido - { cep }");
 

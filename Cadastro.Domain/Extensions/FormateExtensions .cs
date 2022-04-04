@@ -1,4 +1,4 @@
-﻿namespace Cadastro.Service.Extensions
+﻿namespace Cadastro.Domain.Extensions
 {
     public static class FormateExtensions
     {
@@ -17,6 +17,8 @@
         public static string FormateCPF(this object cpf)
         {
             cpf = cpf.RemoveMascara();
+
+            if (cpf == null) return null;
 
             string str = cpf.ToString().PadLeft(11, '0');
             if (str == "00000000000")

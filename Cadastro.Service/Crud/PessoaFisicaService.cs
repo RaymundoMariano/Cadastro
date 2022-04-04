@@ -1,7 +1,7 @@
 ﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
-using Cadastro.Service.Extensions;
+using Cadastro.Domain.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,11 +22,7 @@ namespace Cadastro.Services.Crud
         {
             try 
             { 
-                var pfs = await _pessoaFisicaRepository.GetFullAsync();
-
-                foreach (var pf in pfs) { pf.Cpf = pf.Cpf.FormateCPF(); }
-
-                return pfs;
+                return await _pessoaFisicaRepository.GetFullAsync();
             }
             catch (Exception) { throw; }
         }
@@ -35,8 +31,6 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                cpf = cpf.RemoveMascara();
-
                 if (!cpf.CPFValido()) throw new ServiceException(
                     $"CPF inválido - {cpf}");
 
@@ -44,7 +38,6 @@ namespace Cadastro.Services.Crud
                 if (pf == null) throw new ServiceException(
                     $"CPF informado {cpf} não foi encontrado");
 
-                pf.Cpf = pf.Cpf.FormateCPF();
                 return pf;
             }
             catch (ServiceException) { throw; }
@@ -57,8 +50,6 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                pf.Cpf = pf.Cpf.RemoveMascara();
-
                 if (!pf.Cpf.CPFValido()) throw new ServiceException(
                     $"CPF inválido - {pf.Cpf}");
 
@@ -76,8 +67,6 @@ namespace Cadastro.Services.Crud
             try
             {
                 var pf = await ObterAsync(cpf);
-
-                pf.Cpf = pf.Cpf.RemoveMascara();
 
                 _pessoaFisicaRepository.Remove(pf);
                 await _pessoaFisicaRepository.UnitOfWork.SaveChangesAsync();

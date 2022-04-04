@@ -1,7 +1,6 @@
 ﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
-using Cadastro.Service.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,23 +20,12 @@ namespace Cadastro.Services.Crud
             _pessoaFisicaRepository = pessoaFisicaRepository;
         }
 
-        #region ObterSemVinculos
-        public async Task<IEnumerable<Pessoa>> ObterSemVinculos(int empresaId)
-        {
-            try
-            {
-                return await FormateCPF(_pessoaRepository.GetPessoasSemVinculos(empresaId));
-            }
-            catch (Exception) { throw; }
-        }
-        #endregion
-
         #region ObterAsync
         public async Task<IEnumerable<Pessoa>> ObterAsync()
         {
             try
             {
-                return await FormateCPF(await _pessoaRepository.GetFullAsync());
+                return await _pessoaRepository.GetFullAsync();
             }
             catch (Exception) { throw; }
         }
@@ -49,9 +37,6 @@ namespace Cadastro.Services.Crud
                 var pessoa = await _pessoaRepository.GetFullAsync(pessoaId);
                 if (pessoa == null) throw new ServiceException(
                     $"Pessoa com {pessoaId} não foi encontrada");
-
-                var pf = pessoa.PessoaFisicas.FirstOrDefault(pf => pf.PessoaId == pessoa.PessoaId);
-                if (pf != null) pessoa.Cpf = pf.Cpf.FormateCPF();
 
                 return pessoa;
             }
@@ -90,17 +75,28 @@ namespace Cadastro.Services.Crud
                 if (pessoaId != pessoa.PessoaId) throw new ServiceException(
                     $"Id informado {pessoaId} é Diferente do Id da pessoa {pessoa.PessoaId}");
 
-                pessoa.Cpf = pessoa.Cpf.RemoveMascara();
+                var pf = await _pessoaFisicaRepository.GetFullAsync(pessoaId);
 
-                if (pessoa.Cpf != null
-                    && pessoa.PessoaFisicas.FirstOrDefault(pf => pf.Cpf == pessoa.Cpf) == null)
+                if (pessoa.Cpf != null && pf == null)
                 {
-                    var pf = (new PessoaFisica()
+                    pf = (new PessoaFisica()
                     {
                         Cpf = pessoa.Cpf,
                         PessoaId = pessoa.PessoaId
                     });
                     _pessoaFisicaRepository.Insere(pf);
+                }
+                else
+                {
+                    if (pessoa.Cpf == null && pf != null)
+                    {
+                        _pessoaFisicaRepository.Remove(pf);
+                    }
+                    else
+                    {
+                        throw new ServiceException(
+                            $"Cpf informado {pessoa.Cpf} é Diferente do cpf da pessoa {pf.Cpf}");
+                    }
                 }
                 _pessoaRepository.Update(pessoa);
                 await _pessoaRepository.UnitOfWork.SaveChangesAsync();
@@ -129,21 +125,6 @@ namespace Cadastro.Services.Crud
             }
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }
-        }
-        #endregion
-
-        #region FormateCPF
-        public async Task<IEnumerable<Pessoa>> FormateCPF(IEnumerable<Pessoa> pessoas)
-        {
-            foreach (var pessoa in pessoas)
-            {
-                var pf = await _pessoaFisicaRepository.GetFullAsync(pessoa.PessoaId);
-
-                if (pf == null) continue;
-
-                pessoa.Cpf = pf.Cpf.FormateCPF();
-            }
-            return pessoas;
         }
         #endregion
 
