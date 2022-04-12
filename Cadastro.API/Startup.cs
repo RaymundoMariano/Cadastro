@@ -1,8 +1,10 @@
+using Cadastro.Data;
 using Cadastro.Data.EFC;
 using Cadastro.Data.EFC.Repositories;
 using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.Services;
-using Cadastro.Services.Crud;
+using Cadastro.Domain.Contracts.UnitOfWorks;
+using Cadastro.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -30,29 +32,30 @@ namespace Cadastro.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Injeção dependência DBContext			
+            //Serviço de Contexto			
             services.AddDbContext<CadastroContextEFC>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("CadastroConnection")));
 
-            //Injeção dependência Services
+            //Serviços de Repositorio
             services.AddScoped<CadastroContextEFC>();
             services.AddTransient<IPessoaRepository, PessoaRepositoryEFC>();
-            services.AddTransient<IPessoaService, PessoaService>();
             services.AddTransient<IEnderecoRepository, EnderecoRepositoryEFC>();
-            services.AddTransient<IEnderecoService, EnderecoService>();
             services.AddTransient<IEnderecoPessoaRepository, EnderecoPessoaRepositoryEFC>();
-            services.AddTransient<IEnderecoPessoaService, EnderecoPessoaService>();
             services.AddTransient<ICepRepository, CepRepositoryEFC>();
-            services.AddTransient<ICepService, CepService>();
             services.AddTransient<IEmpresaRepository, EmpresaRepositoryEFC>();
-            services.AddTransient<IEmpresaService, EmpresaService>();
             services.AddTransient<IPessoaFisicaRepository, PessoaFisicaRepositoryEFC>();
-            services.AddTransient<IPessoaFisicaService, PessoaFisicaService>();
             services.AddTransient<IFilialRepository, FilialRepositoryEFC>();
-            services.AddTransient<IFilialService, FilialService>();
             services.AddTransient<ISocioRepository, SocioRepositoryEFC>();
-            services.AddTransient<ISocioService, SocioService>();
+
+            //Serviço de Unidade de Trabalho
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            //Serviços da Aplicação
+            services.AddTransient<IPessoaService, PessoaService>();
+            services.AddTransient<IEnderecoService, EnderecoService>();
+            services.AddTransient<ICepService, CepService>();
+            services.AddTransient<IEmpresaService, EmpresaService>();
 
             //Controllers protegidos contra acesso anônimo exceto as actions que tenham o atributo
             services.AddControllersWithViews(config =>
@@ -63,10 +66,10 @@ namespace Cadastro.API
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
-            //Injeção dependência mappers
+            //Serviço de Mapeamento
             services.AddAutoMapper(typeof(Startup).Assembly);
 
-            //Injeção de dependência NewsoftJson - Microsoft.AspNetCore.Mvc.NewtonsoftJson
+            //Serviço NewsoftJson - Microsoft.AspNetCore.Mvc.NewtonsoftJson
             services.AddControllers()
                     .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling =
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore)

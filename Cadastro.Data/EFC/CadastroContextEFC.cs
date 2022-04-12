@@ -1,13 +1,11 @@
 ﻿using Cadastro.Data.EFC.Tables;
-using Cadastro.Domain.Contracts.Repositories.Seedwork;
 using Cadastro.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Seguranca.Data.EFC.Tables;
-using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC
 {
-    public partial class CadastroContextEFC : DbContext, IUnitOfWork
+    public partial class CadastroContextEFC : DbContext
     {
         public CadastroContextEFC()
         {
@@ -26,11 +24,6 @@ namespace Cadastro.Data.EFC
         public virtual DbSet<PessoaFisica> PessoaFisicas { get; set; }
         public virtual DbSet<Empresa> Empresas { get; set; }
         public virtual DbSet<Socio> Socios { get; set; }
-
-        public Task<int> SaveChangesAsync()
-        {
-            return base.SaveChangesAsync();
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

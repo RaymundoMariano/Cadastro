@@ -17,10 +17,12 @@ namespace Cadastro.API.Controllers
     public class EmpresasController : ControllerBase
     {
         private readonly IEmpresaService _empresaService;
+        private readonly IEnderecoService _enderecoService;
         private readonly IMapper _mapper;
-        public EmpresasController(IEmpresaService empresaService, IMapper mapper)
+        public EmpresasController(IEmpresaService empresaService, IEnderecoService enderecoService, IMapper mapper)
         {
             _empresaService = empresaService;
+            _enderecoService = enderecoService;
             _mapper = mapper;
         }
 
@@ -62,6 +64,11 @@ namespace Cadastro.API.Controllers
                 var empresaModel = _mapper.Map<EmpresaModel>(empresa);
 
                 empresaModel.Cgc = empresaModel.Cgc.FormateCGC();
+
+                foreach(var socio in empresaModel.Socios) 
+                {
+                    socio.PessoaFisica.Pessoa.Cpf = socio.PessoaFisica.Cpf.FormateCPF();
+                }
 
                 foreach(var filial in empresaModel.Filiais) 
                 {
@@ -182,7 +189,7 @@ namespace Cadastro.API.Controllers
 
                 endereco.CEP = endereco.CEP.RemoveMascara();
 
-                await _empresaService.ManterEnderecoAsync(empresaId, endereco);
+                await _enderecoService.ManterEnderecoEmpresaAsync(empresaId, endereco);
 
                 return (new ResponseModel()
                 {

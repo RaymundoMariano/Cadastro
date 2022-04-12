@@ -18,15 +18,15 @@ namespace Cadastro.API.Controllers
     public class PessoasController : ControllerBase
     {
         private readonly IPessoaService _pessoaService;
-        private readonly IEnderecoPessoaService _enderecoPessoaService;
+        private readonly IEnderecoService _enderecoService;
         private readonly IMapper _mapper;
 
         public PessoasController(IPessoaService pessoaService
-            , IEnderecoPessoaService enderecoPessoaService
+            , IEnderecoService enderecoService
             , IMapper mapper)
         {
             _pessoaService = pessoaService;
-            _enderecoPessoaService = enderecoPessoaService;
+            _enderecoService = enderecoService;
             _mapper = mapper;
         }
 
@@ -104,11 +104,11 @@ namespace Cadastro.API.Controllers
 
                 var pessoa = _mapper.Map<Pessoa>(pessoaModel);
 
-                pessoa.Cpf.RemoveMascara();
+                pessoa.Cpf = pessoa.Cpf.RemoveMascara();
 
                 await _pessoaService.InsereAsync(pessoa);
 
-                pessoa.Cpf.FormateCPF();
+                pessoa.Cpf = pessoa.Cpf.FormateCPF();
 
                 CreatedAtAction("GetPessoa", new { pessoaId = pessoaModel.PessoaId }, pessoaModel);
 
@@ -119,6 +119,7 @@ namespace Cadastro.API.Controllers
                     Errors = new List<string>()
                 });
             }
+            catch (ServiceException ex) { return Erro(ex.Message); }
             catch (Exception) { return Erro(null); }
         }
         #endregion
@@ -185,7 +186,7 @@ namespace Cadastro.API.Controllers
 
                 endereco.CEP = endereco.CEP.RemoveMascara();
 
-                await _enderecoPessoaService.ManterAsync(pessoaId, endereco);
+                await _enderecoService.ManterEnderecoPessoaAsync(pessoaId, endereco);
 
                 endereco.CEP = endereco.CEP.FormateCEP();
 

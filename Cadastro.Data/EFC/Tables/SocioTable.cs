@@ -10,16 +10,9 @@ namespace Seguranca.Data.EFC.Tables
         {
             builder.ToTable("Socio");
 
-            builder.HasIndex(e => e.Cpf, "IX_Socio_PessoaFisicaCpf");
-
-            builder.Property(e => e.Cpf)
-                .IsRequired()
-                .HasMaxLength(11)
-                .IsUnicode(false);
-
             builder.HasOne(d => d.PessoaFisica)
                 .WithMany(p => p.Socios)
-                .HasForeignKey(d => d.Cpf)
+                .HasForeignKey(d => d.PessoaFisicaId)
                 .HasConstraintName("FK_Socio_PessoaFisica");
 
             builder.HasOne(d => d.Empresa)

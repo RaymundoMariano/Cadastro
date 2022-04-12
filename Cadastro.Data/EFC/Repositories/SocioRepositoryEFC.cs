@@ -12,13 +12,13 @@ namespace Cadastro.Data.EFC.Repositories
         }
 
         #region GetFullAsync
-        public async Task<Socio> GetFullAsync(int empresaId, string cpf)
+        public async Task<Socio> GetFullAsync(int empresaId, int pessoaFisicaId)
         {
             return await _cadastroContext.Socios
                     .AsNoTracking()
                     .Include(s => s.PessoaFisica)
                         .ThenInclude(s => s.Pessoa)
-                    .FirstOrDefaultAsync(s => s.EmpresaId == empresaId && s.Cpf == cpf);
+                    .FirstOrDefaultAsync(s => s.EmpresaId == empresaId && s.PessoaFisicaId == pessoaFisicaId);
         }
         #endregion
     }

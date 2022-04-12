@@ -5,6 +5,6 @@ namespace Cadastro.Domain.Contracts.Repositories
 {
     public interface ISocioRepository : IRepository<Socio>
     {
-        Task<Socio> GetFullAsync(int empresaId, string cpf);
+        Task<Socio> GetFullAsync(int empresaId, int pessoaFisicaId);
     }
 }

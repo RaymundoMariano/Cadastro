@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Cadastro.Domain.Contracts.Repositories;
-using Cadastro.Domain.Contracts.Repositories.Seedwork;
 using Cadastro.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ namespace Cadastro.Data.EFC.Repositories
     public class RepositoryEFC<T> : IRepository<T> where T : _Entity
     {
         protected readonly CadastroContextEFC _cadastroContext;
-        public IUnitOfWork UnitOfWork => _cadastroContext;
         public RepositoryEFC(CadastroContextEFC cadastroContext)
         {
             _cadastroContext = cadastroContext;
@@ -28,10 +26,10 @@ namespace Cadastro.Data.EFC.Repositories
         }
         #endregion
 
-        #region Insere
-        public void Insere(T entity)
+        #region InsereAsync
+        public async Task InsereAsync(T entity)
         {
-            _cadastroContext.Set<T>().Add(entity);
+            await _cadastroContext.Set<T>().AddAsync(entity);
         }
         #endregion
 

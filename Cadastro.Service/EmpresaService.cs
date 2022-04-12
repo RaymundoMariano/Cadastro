@@ -1,32 +1,19 @@
-﻿using Cadastro.Domain.Contracts.Repositories;
-using Cadastro.Domain.Contracts.Services;
+﻿using Cadastro.Domain.Contracts.Services;
+using Cadastro.Domain.Contracts.UnitOfWorks;
 using Cadastro.Domain.Entities;
-using Cadastro.Domain.Enums;
 using Cadastro.Domain.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cadastro.Services.Crud
+namespace Cadastro.Services
 {
     public class EmpresaService : IEmpresaService
     {
-        private readonly IEmpresaRepository _empresaRepository;
-        private readonly IEnderecoService _enderecoService;
-        private readonly ISocioService _socioService;
-        private readonly IPessoaFisicaService _pessoaFisicaService;
-        private readonly IFilialRepository _filialRepository;
-        public EmpresaService(IEmpresaRepository empresaRepository
-            , IEnderecoService enderecoService
-            , ISocioService socioService
-            , IPessoaFisicaService pessoaFisicaService
-            , IFilialRepository filialRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public EmpresaService(IUnitOfWork unitOfWork)
         {
-            _empresaRepository = empresaRepository;
-            _enderecoService = enderecoService;
-            _socioService = socioService;
-            _pessoaFisicaService = pessoaFisicaService;
-            _filialRepository = filialRepository;
+            _unitOfWork = unitOfWork;
         }
 
         #region ObterAsync
@@ -34,7 +21,7 @@ namespace Cadastro.Services.Crud
         {
             try 
             {
-                return await _empresaRepository.GetFullAsync();
+                return await _unitOfWork.Empresas.GetFullAsync();
             }
             catch (Exception) { throw; }
         }
@@ -43,7 +30,8 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                var empresa = await _empresaRepository.GetFullAsync(empresaId);
+                var empresa = await _unitOfWork.Empresas.GetFullAsync(empresaId);
+
                 if (empresa == null) throw new ServiceException(
                     $"Empresa com Id {empresaId} não foi encontrada");
                 
@@ -60,7 +48,8 @@ namespace Cadastro.Services.Crud
                 if (!cgc.CNPJValido()) throw new ServiceException(
                     $"O CGC informado {cgc} é inválido!");
 
-                var empresa = await _empresaRepository.GetFullAsync(cgc.RemoveMascara());
+                var empresa = await _unitOfWork.Empresas.GetFullAsync(cgc.RemoveMascara());
+
                 if (empresa == null) throw new ServiceException(
                     $"Empresa com CGC {cgc} não foi encontrada!");
                 
@@ -79,8 +68,8 @@ namespace Cadastro.Services.Crud
                 if (!empresa.Cgc.CNPJValido()) throw new ServiceException(
                     $"O CGC informado {empresa.Cgc} é inválido!");
 
-                _empresaRepository.Insere(empresa);
-                await _empresaRepository.UnitOfWork.SaveChangesAsync();
+                await _unitOfWork.Empresas.InsereAsync(empresa);
+                await _unitOfWork.SaveChangesAsync();
             }
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }
@@ -98,8 +87,8 @@ namespace Cadastro.Services.Crud
                 if (!empresa.Cgc.CNPJValido()) throw new ServiceException(
                     $"O CGC informado {empresa.Cgc} é inválido!");
 
-                _empresaRepository.Update(empresa);
-                await _empresaRepository.UnitOfWork.SaveChangesAsync();
+                _unitOfWork.Empresas.Update(empresa);
+                await _unitOfWork.SaveChangesAsync();
             }
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }
@@ -111,55 +100,14 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                var empresa = await _empresaRepository.GetFullAsync(empresaId);
+                var empresa = await ObterAsync(empresaId);
 
                 var pendencias = GetPendencias(empresa);
                 if (pendencias != null) throw new ServiceException(pendencias);
 
-                _empresaRepository.Remove(empresa);
+                _unitOfWork.Empresas.Remove(empresa);
 
-                await _empresaRepository.UnitOfWork.SaveChangesAsync();
-            }
-            catch (ServiceException) { throw; }
-            catch (Exception) { throw; }
-        }
-        #endregion
-
-        #region ManterEnderecoAsync
-        public async Task ManterEnderecoAsync(int empresaId, Endereco endereco)
-        {
-            try
-            {
-                var empresa = await _empresaRepository.GetFullAsync(empresaId);
-
-                if (endereco.EnderecoId == 0)
-                {
-                    await _enderecoService.InsereAsync(endereco);
-
-                    empresa.EnderecoId = endereco.EnderecoId;
-
-                    await UpdateAsync(empresaId, empresa);
-                }
-                else
-                {
-                    switch ((EEvento)endereco.Evento)
-                    {
-                        case EEvento.Alterar:
-                            await _enderecoService.UpdateAsync(endereco.EnderecoId, endereco);
-                            break;
-
-                        case EEvento.Excluir:
-                            empresa.EnderecoId = null;
-                            await UpdateAsync(empresaId, empresa);
-
-                            await _enderecoService.RemoveAsync(endereco.EnderecoId);
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-                await _empresaRepository.UnitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
             }
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }
@@ -173,7 +121,7 @@ namespace Cadastro.Services.Crud
             {
                 var pessoas = new List<Pessoa>();
 
-                var pfs = await _pessoaFisicaService.ObterAsync();
+                var pfs = await _unitOfWork.PessoasFisicas.GetFullAsync();
 
                 foreach (var pf in pfs)
                 {
@@ -202,7 +150,9 @@ namespace Cadastro.Services.Crud
             {
                 foreach (var pessoa in pessoas)
                 {
-                    var socio = await _socioService.ObterAsync(empresaId, pessoa.Cpf);
+                    var pf = await _unitOfWork.PessoasFisicas.GetFullAsync(pessoa.Cpf);
+
+                    var socio = await _unitOfWork.Socios.GetFullAsync(empresaId, pf.PessoaFisicaId);
 
                     if (socio == null)
                     {
@@ -210,17 +160,18 @@ namespace Cadastro.Services.Crud
                         {
                             socio = (new Socio()
                             {
-                                Cpf = pessoa.Cpf,
+                                PessoaFisicaId = pf.PessoaFisicaId,
                                 EmpresaId = empresaId
                             });
-                            await _socioService.InsereAsync(socio);
+                            await _unitOfWork.Socios.InsereAsync(socio);
                         }
                     }
                     else
                     {                        
-                        if (!pessoa.Selected) { await _socioService.RemoveAsync(socio.SocioId); }
+                        if (!pessoa.Selected) { _unitOfWork.Socios.Remove(socio); }
                     }
                 }
+                await _unitOfWork.SaveChangesAsync();
             }
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }
@@ -242,7 +193,7 @@ namespace Cadastro.Services.Crud
                     filiais.Add(filial);
                 }
 
-                var empresas = _empresaRepository.GetFiliaisSemVinculos();
+                var empresas = _unitOfWork.Empresas.GetFiliaisSemVinculos();
 
                 foreach (var emp in empresas)
                 {
@@ -270,7 +221,7 @@ namespace Cadastro.Services.Crud
             {
                 foreach (var empresa in filiais)
                 {
-                    var filial = await _filialRepository.GetFullAsync(empresa.Cgc);
+                    var filial = await _unitOfWork.Filiais.GetFullAsync(empresa.Cgc);
 
                     if (filial == null)
                     {
@@ -281,19 +232,18 @@ namespace Cadastro.Services.Crud
                                 Cgc = empresa.Cgc,
                                 EmpresaId = empresaId
                             });
-                            _filialRepository.Insere(filial);
-                            _filialRepository.UnitOfWork.SaveChanges();
+                            await _unitOfWork.Filiais.InsereAsync(filial);
                         }
                     }
                     else
                     {
                         if (!empresa.Selected) 
                         {
-                            _filialRepository.Remove(filial);
-                            _filialRepository.UnitOfWork.SaveChanges();
+                            _unitOfWork.Filiais.Remove(filial);
                         }
                     }
                 }
+                await _unitOfWork.SaveChangesAsync();
             }
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }

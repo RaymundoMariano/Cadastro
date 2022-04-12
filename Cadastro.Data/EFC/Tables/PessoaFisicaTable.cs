@@ -8,9 +8,10 @@ namespace Seguranca.Data.EFC.Tables
     {
         public void Configure(EntityTypeBuilder<PessoaFisica> builder)
         {
-            builder.HasKey(e => e.Cpf);
-
             builder.ToTable("PessoaFisica");
+
+            builder.HasIndex(e => new { e.Cpf }, "IX_PessoaFisica")
+                .IsUnique();
 
             builder.Property(e => e.Cpf)
                 .IsRequired()

@@ -3,19 +3,18 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 using Cadastro.Domain.Contracts.Services;
-using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Extensions;
+using Cadastro.Domain.Contracts.UnitOfWorks;
 
-namespace Cadastro.Services.Crud
+namespace Cadastro.Services
 {
     public class CepService : ICepService
     {
-        private readonly ICepRepository _cepRepository;
-
-        public CepService(ICepRepository cepRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public CepService(IUnitOfWork unitOfWork)
         {
-            _cepRepository = cepRepository;
+            _unitOfWork = unitOfWork;
         }
 
         #region ObterAsync
@@ -23,7 +22,7 @@ namespace Cadastro.Services.Crud
         {
             try
             {
-                return await _cepRepository.ObterAsync(); 
+                return await _unitOfWork.Ceps.ObterAsync(); 
             }
             catch (Exception) { throw; }
         }
@@ -35,7 +34,7 @@ namespace Cadastro.Services.Crud
                 if (!cep.CEPValido())
                     throw new ServiceException($"Cep inválido - { cep }");
 
-                var Cep = await _cepRepository.ObterAsync(cep);
+                var Cep = await _unitOfWork.Ceps.ObterAsync(cep);
                 if (Cep != null)
                     return Cep;
 
@@ -68,8 +67,8 @@ namespace Cadastro.Services.Crud
                 if (!cep.CEP.CEPValido())
                     throw new ServiceException($"Cep inválido - {cep.CEP}");
 
-                _cepRepository.Insere(cep);
-                await _cepRepository.UnitOfWork.SaveChangesAsync();
+                await _unitOfWork.Ceps.InsereAsync(cep);
+                await _unitOfWork.SaveChangesAsync();
             }
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }

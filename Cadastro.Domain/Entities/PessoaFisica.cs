@@ -9,6 +9,7 @@ namespace Cadastro.Domain.Entities
             Socios = new HashSet<Socio>();
         }
 
+        public int PessoaFisicaId { get; set; }
         public string Cpf { get; set; }
         public int PessoaId { get; set; }
 

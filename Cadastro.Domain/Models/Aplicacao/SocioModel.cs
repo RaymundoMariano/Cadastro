@@ -4,7 +4,7 @@
     {
         public int SocioId { get; set; }
         public int EmpresaId { get; set; }
-        public string Cpf { get; set; }
+        public int PessoaFisicaId { get; set; }
 
         public virtual PessoaFisicaModel PessoaFisica { get; set; }
         public virtual EmpresaModel Empresa { get; set; }
