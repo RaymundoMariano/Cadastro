@@ -18,15 +18,12 @@ namespace Cadastro.API.Controllers
     public class PessoasController : ControllerBase
     {
         private readonly IPessoaService _pessoaService;
-        private readonly IEnderecoService _enderecoService;
         private readonly IMapper _mapper;
 
         public PessoasController(IPessoaService pessoaService
-            , IEnderecoService enderecoService
             , IMapper mapper)
         {
             _pessoaService = pessoaService;
-            _enderecoService = enderecoService;
             _mapper = mapper;
         }
 
@@ -186,7 +183,7 @@ namespace Cadastro.API.Controllers
 
                 endereco.CEP = endereco.CEP.RemoveMascara();
 
-                await _enderecoService.ManterEnderecoPessoaAsync(pessoaId, endereco);
+                await _pessoaService.ManterEnderecoAsync(pessoaId, endereco);
 
                 endereco.CEP = endereco.CEP.FormateCEP();
 

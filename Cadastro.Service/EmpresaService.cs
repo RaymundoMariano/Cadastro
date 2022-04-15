@@ -11,9 +11,11 @@ namespace Cadastro.Services
     public class EmpresaService : IEmpresaService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public EmpresaService(IUnitOfWork unitOfWork)
+        private readonly IEnderecoService _enderecoService;
+        public EmpresaService(IUnitOfWork unitOfWork, IEnderecoService enderecoService)
         {
             _unitOfWork = unitOfWork;
+            _enderecoService = enderecoService;
         }
 
         #region ObterAsync
@@ -247,6 +249,13 @@ namespace Cadastro.Services
             }
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }
+        }
+        #endregion
+
+        #region ManterEnderecoAsync
+        public async Task ManterEnderecoAsync(int empresaId, Endereco endereco)
+        {
+            await _enderecoService.ManterEnderecoEmpresaAsync(empresaId, endereco);
         }
         #endregion
 

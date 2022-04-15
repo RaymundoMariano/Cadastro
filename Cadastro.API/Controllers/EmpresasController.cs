@@ -17,12 +17,10 @@ namespace Cadastro.API.Controllers
     public class EmpresasController : ControllerBase
     {
         private readonly IEmpresaService _empresaService;
-        private readonly IEnderecoService _enderecoService;
         private readonly IMapper _mapper;
         public EmpresasController(IEmpresaService empresaService, IEnderecoService enderecoService, IMapper mapper)
         {
             _empresaService = empresaService;
-            _enderecoService = enderecoService;
             _mapper = mapper;
         }
 
@@ -189,7 +187,7 @@ namespace Cadastro.API.Controllers
 
                 endereco.CEP = endereco.CEP.RemoveMascara();
 
-                await _enderecoService.ManterEnderecoEmpresaAsync(empresaId, endereco);
+                await _empresaService.ManterEnderecoAsync(empresaId, endereco);
 
                 return (new ResponseModel()
                 {

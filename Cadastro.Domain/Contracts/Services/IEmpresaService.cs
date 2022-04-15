@@ -11,5 +11,6 @@ namespace Cadastro.Domain.Contracts.Services
         Task ManterFiliaisAsync(int empresaId, List<Filial> filiais);
         Task<IEnumerable<Pessoa>> GetSocios(int empresaId);
         Task ManterSociosAsync(int empresaId, List<Pessoa> pessoas);
+        Task ManterEnderecoAsync(int empresaId, Endereco endereco);
     }
 }

@@ -11,9 +11,11 @@ namespace Cadastro.Services
     public class PessoaService : IPessoaService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PessoaService(IUnitOfWork unitOfWork)
+        private readonly IEnderecoService _enderecoService;
+        public PessoaService(IUnitOfWork unitOfWork, IEnderecoService enderecoService)
         {
             _unitOfWork = unitOfWork;
+            _enderecoService = enderecoService;
         }
 
         #region ObterAsync
@@ -170,6 +172,13 @@ namespace Cadastro.Services
             }
             catch (ServiceException) { throw; }
             catch (Exception) { throw; }
+        }
+        #endregion
+
+        #region ManterEnderecoAsync
+        public async Task ManterEnderecoAsync(int pessoaId, Endereco endereco)
+        {
+            await _enderecoService.ManterEnderecoPessoaAsync(pessoaId, endereco);
         }
         #endregion
 
