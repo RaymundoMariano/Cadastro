@@ -6,23 +6,18 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cadastro.Services
+namespace Cadastro.Service
 {
-    public class EnderecoService : IEnderecoService
+    public class EnderecoService(IUnitOfWork unitOfWork, ICepService cepService) : IEnderecoService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ICepService _cepService;
-        public EnderecoService(IUnitOfWork unitOfWork, ICepService cepService)
-        {
-            _unitOfWork = unitOfWork;
-            _cepService = cepService;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly ICepService _cepService = cepService;
 
         #region ObterAsync
         public async Task<IEnumerable<Endereco>> ObterAsync()
         {
             try
-            { 
+            {
                 return await _unitOfWork.Enderecos.GetFullAsync();
             }
             catch (Exception) { throw; }
@@ -108,11 +103,11 @@ namespace Cadastro.Services
                 {
                     await InsereAsync(endereco);
 
-                    var ep = (new EnderecoPessoa()
+                    var ep = new EnderecoPessoa()
                     {
                         EnderecoId = endereco.EnderecoId,
                         PessoaId = pessoa.PessoaId
-                    });
+                    };
 
                     await _unitOfWork.EnderecosPessoa.InsereAsync(ep);
                 }

@@ -1,10 +1,9 @@
-﻿using Cadastro.Data.EFC;
-using Cadastro.Domain.Contracts.Repositories;
+﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Contracts.UnitOfWorks;
 using System;
 using System.Threading.Tasks;
 
-namespace Cadastro.Data
+namespace Cadastro.Data.EFC
 {
     public class UnitOfWork : IUnitOfWork
     {

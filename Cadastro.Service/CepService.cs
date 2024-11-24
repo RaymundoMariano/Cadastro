@@ -7,22 +7,18 @@ using Cadastro.Domain.Entities;
 using Cadastro.Domain.Extensions;
 using Cadastro.Domain.Contracts.UnitOfWorks;
 
-namespace Cadastro.Services
+namespace Cadastro.Service
 {
-    public class CepService : ICepService
+    public class CepService(IUnitOfWork unitOfWork) : ICepService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        public CepService(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         #region ObterAsync
         public async Task<IEnumerable<Cep>> ObterAsync()
         {
             try
             {
-                return await _unitOfWork.Ceps.ObterAsync(); 
+                return await _unitOfWork.Ceps.ObterAsync();
             }
             catch (Exception) { throw; }
         }
@@ -32,13 +28,13 @@ namespace Cadastro.Services
             try
             {
                 if (!cep.CEPValido())
-                    throw new ServiceException($"Cep inválido - { cep }");
+                    throw new ServiceException($"Cep inválido - {cep}");
 
                 var Cep = await _unitOfWork.Ceps.ObterAsync(cep);
                 if (Cep != null)
                     return Cep;
 
-                var lCep = await new Correios.NET.Services().GetAddressesAsync(cep.ToString());
+                var lCep = await new Correios.NET.CorreiosService().GetAddressesAsync(cep.ToString());
                 if (lCep.Count() == 0)
                     throw new ServiceException($"Cep informado {cep} não foi encontrado!");
 

@@ -8,12 +8,8 @@ using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
 {
-    public class EmpresaRepositoryEFC : RepositoryEFC<Empresa>, IEmpresaRepository
+    public class EmpresaRepositoryEFC(CadastroContextEFC cadastroContext) : RepositoryEFC<Empresa>(cadastroContext), IEmpresaRepository
     {
-        public EmpresaRepositoryEFC(CadastroContextEFC cadastroContext) : base(cadastroContext)
-        {
-        }
-
         #region GetFullAsync
         public async Task<IEnumerable<Empresa>> GetFullAsync()
         {

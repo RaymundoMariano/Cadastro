@@ -6,22 +6,17 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cadastro.Services
+namespace Cadastro.Service
 {
-    public class EmpresaService : IEmpresaService
+    public class EmpresaService(IUnitOfWork unitOfWork, IEnderecoService enderecoService) : IEmpresaService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IEnderecoService _enderecoService;
-        public EmpresaService(IUnitOfWork unitOfWork, IEnderecoService enderecoService)
-        {
-            _unitOfWork = unitOfWork;
-            _enderecoService = enderecoService;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IEnderecoService _enderecoService = enderecoService;
 
         #region ObterAsync
         public async Task<IEnumerable<Empresa>> ObterAsync()
         {
-            try 
+            try
             {
                 return await _unitOfWork.Empresas.GetFullAsync();
             }
@@ -36,7 +31,7 @@ namespace Cadastro.Services
 
                 if (empresa == null) throw new ServiceException(
                     $"Empresa com Id {empresaId} não foi encontrada");
-                
+
                 return empresa;
             }
             catch (ServiceException) { throw; }
@@ -54,7 +49,7 @@ namespace Cadastro.Services
 
                 if (empresa == null) throw new ServiceException(
                     $"Empresa com CGC {cgc} não foi encontrada!");
-                
+
                 return empresa;
             }
             catch (ServiceException) { throw; }
@@ -160,16 +155,16 @@ namespace Cadastro.Services
                     {
                         if (pessoa.Selected)
                         {
-                            socio = (new Socio()
+                            socio = new Socio()
                             {
                                 PessoaFisicaId = pf.PessoaFisicaId,
                                 EmpresaId = empresaId
-                            });
+                            };
                             await _unitOfWork.Socios.InsereAsync(socio);
                         }
                     }
                     else
-                    {                        
+                    {
                         if (!pessoa.Selected) { _unitOfWork.Socios.Remove(socio); }
                     }
                 }
@@ -189,7 +184,7 @@ namespace Cadastro.Services
 
                 var empresa = await ObterAsync(empresaId);
 
-                foreach (var filial in empresa.Filiais) 
+                foreach (var filial in empresa.Filiais)
                 {
                     filial.Selected = true;
                     filiais.Add(filial);
@@ -229,17 +224,17 @@ namespace Cadastro.Services
                     {
                         if (empresa.Selected)
                         {
-                            filial = (new Filial()
+                            filial = new Filial()
                             {
                                 Cgc = empresa.Cgc,
                                 EmpresaId = empresaId
-                            });
+                            };
                             await _unitOfWork.Filiais.InsereAsync(filial);
                         }
                     }
                     else
                     {
-                        if (!empresa.Selected) 
+                        if (!empresa.Selected)
                         {
                             _unitOfWork.Filiais.Remove(filial);
                         }
@@ -260,23 +255,23 @@ namespace Cadastro.Services
         #endregion
 
         #region GetPendencias
-        private string GetPendencias(Empresa empresa)
+        private static string GetPendencias(Empresa empresa)
         {
             string pendencias = null;
 
             if (empresa.Endereco != null)
             {
-                pendencias += ($"\n {empresa.Nome} com endereço associado! Remova o endereço.");
+                pendencias += $"\n {empresa.Nome} com endereço associado! Remova o endereço.";
             }
 
             if (empresa.Socios.Count != 0)
             {
-                pendencias += ($"\n {empresa.Nome} contém associado(s)! Remova os sócio(s).");
+                pendencias += $"\n {empresa.Nome} contém associado(s)! Remova os sócio(s).";
             }
 
             if (empresa.Filiais.Count != 0)
             {
-                pendencias += ($"\n {empresa.Nome} com filiais associadas! Remova as filiais.");
+                pendencias += $"\n {empresa.Nome} com filiais associadas! Remova as filiais.";
             }
 
             return pendencias;

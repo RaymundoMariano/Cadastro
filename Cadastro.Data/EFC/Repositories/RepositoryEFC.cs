@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
 {
-    public class RepositoryEFC<T> : IRepository<T> where T : _Entity
+    public class RepositoryEFC<T>(CadastroContextEFC cadastroContext) : IRepository<T> where T : _Entity
     {
-        protected readonly CadastroContextEFC _cadastroContext;
-        public RepositoryEFC(CadastroContextEFC cadastroContext)
-        {
-            _cadastroContext = cadastroContext;
-        }
-                        
+        protected readonly CadastroContextEFC _cadastroContext = cadastroContext;
+
         #region ObterAsync
         public async Task<IEnumerable<T>> ObterAsync()
         {

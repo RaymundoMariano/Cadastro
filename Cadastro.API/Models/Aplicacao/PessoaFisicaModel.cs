@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Cadastro.Domain.Models.Aplicacao
+namespace Cadastro.API.Models.Aplicacao
 {
     public partial class PessoaFisicaModel
     {

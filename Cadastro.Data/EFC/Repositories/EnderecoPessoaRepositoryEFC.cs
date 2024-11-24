@@ -5,12 +5,8 @@ using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
 {
-    public class EnderecoPessoaRepositoryEFC : RepositoryEFC<EnderecoPessoa>, IEnderecoPessoaRepository
+    public class EnderecoPessoaRepositoryEFC(CadastroContextEFC cadastroContext) : RepositoryEFC<EnderecoPessoa>(cadastroContext), IEnderecoPessoaRepository
     {
-        public EnderecoPessoaRepositoryEFC(CadastroContextEFC cadastroContext) : base(cadastroContext)
-        {
-        }
-
         #region ObterAsync
         public async Task<EnderecoPessoa> ObterAsync(int enderecoId, int pessoaId)
         {

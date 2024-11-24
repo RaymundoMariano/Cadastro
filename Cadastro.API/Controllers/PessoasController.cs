@@ -7,30 +7,24 @@ using Microsoft.AspNetCore.Authorization;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Enums;
 using Cadastro.Domain.Entities;
-using Cadastro.Domain.Models.Aplicacao;
-using Cadastro.Domain.Models.Response;
 using Cadastro.Domain.Extensions;
+using Cadastro.API.Models.Response;
+using Cadastro.API.Models.Aplicacao;
 
 namespace Cadastro.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PessoasController : ControllerBase
+    public class PessoasController(IPessoaService pessoaService
+            , IMapper mapper) : ControllerBase
     {
-        private readonly IPessoaService _pessoaService;
-        private readonly IMapper _mapper;
-
-        public PessoasController(IPessoaService pessoaService
-            , IMapper mapper)
-        {
-            _pessoaService = pessoaService;
-            _mapper = mapper;
-        }
+        private readonly IPessoaService _pessoaService = pessoaService;
+        private readonly IMapper _mapper = mapper;
 
         #region GetPessoa
         // GET: api/Pessoas
         [HttpGet]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<ActionResult<ResponseModel>> GetPessoa()
         {
             try
@@ -56,12 +50,12 @@ namespace Cadastro.API.Controllers
                     Errors = new List<string>()
                 });
             }
-            catch (Exception) { return Erro(null); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
 
         // GET: api/Pessoas/5
         [HttpGet("{pessoaId}")]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<ActionResult<ResponseModel>> GetPessoa(int pessoaId)
         {
             try
@@ -82,10 +76,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoaModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -113,11 +108,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<PessoaModel>(pessoa),
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -143,11 +138,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoaModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -164,11 +159,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = null,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -191,23 +186,22 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<EnderecoModel>(endereco),
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
         #region Erro
-        private ActionResult<ResponseModel> Erro(string mensagem)
+        private static ActionResult<ResponseModel> Erro(string mensagem, bool succeeded)
         {
             return (new ResponseModel()
             {
-                Succeeded = mensagem == null ? false : true,
+                Succeeded = succeeded,
                 ObjectRetorno = null,
-                Errors = (mensagem == null)
-                    ? new List<string>() : new List<string> { mensagem }
+                Errors = (mensagem == null) ? [] : [mensagem]
             });
         }
         #endregion

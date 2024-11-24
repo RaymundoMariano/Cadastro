@@ -1,4 +1,4 @@
-﻿namespace Cadastro.Domain.Models.Aplicacao
+﻿namespace Cadastro.API.Models.Aplicacao
 {
     public class _Model
     {

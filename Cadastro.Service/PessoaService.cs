@@ -6,17 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cadastro.Services
+namespace Cadastro.Service
 {
-    public class PessoaService : IPessoaService
+    public class PessoaService(IUnitOfWork unitOfWork, IEnderecoService enderecoService) : IPessoaService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IEnderecoService _enderecoService;
-        public PessoaService(IUnitOfWork unitOfWork, IEnderecoService enderecoService)
-        {
-            _unitOfWork = unitOfWork;
-            _enderecoService = enderecoService;
-        }
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IEnderecoService _enderecoService = enderecoService;
 
         #region ObterAsync
         public async Task<IEnumerable<Pessoa>> ObterAsync()
@@ -58,11 +53,11 @@ namespace Cadastro.Services
                     await _unitOfWork.Pessoas.InsereAsync(pessoa);
                     await _unitOfWork.SaveChangesAsync();
 
-                    pf = (new PessoaFisica()
+                    pf = new PessoaFisica()
                     {
                         Cpf = pessoa.Cpf,
                         PessoaId = pessoa.PessoaId
-                    });
+                    };
                     await _unitOfWork.PessoasFisicas.InsereAsync(pf);
                 }
                 else
@@ -101,11 +96,11 @@ namespace Cadastro.Services
 
                         if (pfOrigem.Cpf != pessoa.Cpf)
                         {
-                            pf = (new PessoaFisica()
+                            pf = new PessoaFisica()
                             {
                                 Cpf = pfOrigem.Cpf,
                                 PessoaId = pessoaId
-                            });
+                            };
                             _unitOfWork.PessoasFisicas.Remove(pf);
 
                             pf.Cpf = pessoa.Cpf;
@@ -121,8 +116,8 @@ namespace Cadastro.Services
                                 $" Alteração inválida!");
                         }
 
-                        pf = await _unitOfWork.PessoasFisicas.ObterAsync(pfOrigem.PessoaFisicaId);  
-                        
+                        pf = await _unitOfWork.PessoasFisicas.ObterAsync(pfOrigem.PessoaFisicaId);
+
                         _unitOfWork.PessoasFisicas.Remove(pf);
                     }
                 }
@@ -136,11 +131,11 @@ namespace Cadastro.Services
                             _unitOfWork.PessoasFisicas.Remove(pf);
                         }
 
-                        pf = (new PessoaFisica()
+                        pf = new PessoaFisica()
                         {
                             Cpf = pessoa.Cpf,
                             PessoaId = pessoaId
-                        });
+                        };
                         await _unitOfWork.PessoasFisicas.InsereAsync(pf);
                     }
                 }
@@ -191,7 +186,7 @@ namespace Cadastro.Services
 
             if (pessoa.EnderecoPessoas.Count != 0)
             {
-                pendencias += ($"\n {pessoa.Nome} com endereço(s) associado(s)! Remova o(s) endereço(s).");
+                pendencias += $"\n {pessoa.Nome} com endereço(s) associado(s)! Remova o(s) endereço(s).";
             }
 
             var pf = pessoa.PessoaFisicas.FirstOrDefault(pf => pf.PessoaId == pessoa.PessoaId);
@@ -204,7 +199,7 @@ namespace Cadastro.Services
                         var socio = pf.Socios.FirstOrDefault(s => s.PessoaFisicaId == pf.PessoaFisicaId);
                         if (socio != null)
                         {
-                            pendencias += ($"\n {pessoa.Nome} é sócio da empresa {socio.Empresa.Nome}! Remova o sócio.");
+                            pendencias += $"\n {pessoa.Nome} é sócio da empresa {socio.Empresa.Nome}! Remova o sócio.";
                         }
                     }
                 }

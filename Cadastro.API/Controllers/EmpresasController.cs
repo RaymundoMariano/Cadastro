@@ -2,27 +2,22 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Cadastro.API.Models.Aplicacao;
+using Cadastro.API.Models.Response;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Enums;
 using Cadastro.Domain.Extensions;
-using Cadastro.Domain.Models.Aplicacao;
-using Cadastro.Domain.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cadastro.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmpresasController : ControllerBase
+    public class EmpresasController(IEmpresaService empresaService, IMapper mapper) : ControllerBase
     {
-        private readonly IEmpresaService _empresaService;
-        private readonly IMapper _mapper;
-        public EmpresasController(IEmpresaService empresaService, IEnderecoService enderecoService, IMapper mapper)
-        {
-            _empresaService = empresaService;
-            _mapper = mapper;
-        }
+        private readonly IEmpresaService _empresaService = empresaService;
+        private readonly IMapper _mapper = mapper;
 
         #region GetEmpresa
         // GET: api/Empresas
@@ -45,10 +40,10 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = empresasModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (Exception) { return Erro(null); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
 
         // GET: api/Empresas/5
@@ -85,11 +80,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = empresaModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -117,11 +112,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<EmpresaModel>(empresa),
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -147,11 +142,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = empresaModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion        
 
@@ -168,11 +163,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = null,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -193,11 +188,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = enderecoModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -227,11 +222,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = filiaisModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -252,11 +247,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = filiaisModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion
 
@@ -278,11 +273,11 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = _mapper.Map<List<PessoaModel>>(pessoas),
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion        
 
@@ -303,23 +298,22 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoasModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
-            catch (ServiceException ex) { return Erro(ex.Message); }
-            catch (Exception) { return Erro(null); }
+            catch (ServiceException ex) { return Erro(ex.Message, true); }
+            catch (Exception ex) { return Erro(ex.Message, false); }
         }
         #endregion        
 
         #region Erro
-        private ActionResult<ResponseModel> Erro(string mensagem)
+        private static ActionResult<ResponseModel> Erro(string mensagem, bool succeeded)
         {
             return (new ResponseModel()
             {
-                Succeeded = mensagem == null ? false : true,
+                Succeeded = succeeded,
                 ObjectRetorno = null,
-                Errors = (mensagem == null)
-                    ? new List<string>() : new List<string> { mensagem }
+                Errors = (mensagem == null) ? [] : [mensagem]
             });
         }
         #endregion

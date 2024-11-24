@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
 {
-    public class PessoaRepositoryEFC : RepositoryEFC<Pessoa>, IPessoaRepository
+    public class PessoaRepositoryEFC(CadastroContextEFC cadastroContext) : RepositoryEFC<Pessoa>(cadastroContext), IPessoaRepository
     {
-        public PessoaRepositoryEFC(CadastroContextEFC cadastroContext) : base(cadastroContext)
-        {
-        }
-
         #region GetFullAsync
         public async Task<IEnumerable<Pessoa>> GetFullAsync()
         {
