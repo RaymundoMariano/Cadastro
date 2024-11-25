@@ -1,0 +1,12 @@
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\bin\Release\net5.0\Cadastro.Domain.deps.json
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\bin\Release\net5.0\Cadastro.Domain.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\bin\Release\net5.0\Cadastro.Domain.pdb
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\obj\Release\net5.0\Cadastro.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\obj\Release\net5.0\Cadastro.Domain.AssemblyInfoInputs.cache
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\obj\Release\net5.0\Cadastro.Domain.AssemblyInfo.cs
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\obj\Release\net5.0\Cadastro.Domain.csproj.CoreCompileInputs.cache
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\obj\Release\net5.0\Cadastro.Domain.sourcelink.json
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\obj\Release\net5.0\Cadastro.Domain.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\obj\Release\net5.0\refint\Cadastro.Domain.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\obj\Release\net5.0\Cadastro.Domain.pdb
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Domain\obj\Release\net5.0\ref\Cadastro.Domain.dll

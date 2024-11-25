@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Cadastro.Service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+410fc2ffa1879a0e342839de8eb5dc2b0cd18034")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bda352c6b5308a56e6bdbe94e99b2f21875cb03f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Cadastro.Service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Cadastro.Service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

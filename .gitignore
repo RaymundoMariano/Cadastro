@@ -914,3 +914,8 @@ Cadastro.Domain/obj/Debug/net5.0/_IsIncrementalBuild
 Cadastro.Domain/obj/Debug/net5.0/Cadastro.Domain.csproj.BuildWithSkipAnalyzers
 Cadastro.Service/obj/Debug/net5.0/_IsIncrementalBuild
 Cadastro.Service/obj/Debug/net5.0/Cadastro.Service.csproj.BuildWithSkipAnalyzers
+*.vsidx
+*.bin
+*.bin
+*.bin
+.vs/ProjectEvaluation/cadastro.metadata.v9.bin

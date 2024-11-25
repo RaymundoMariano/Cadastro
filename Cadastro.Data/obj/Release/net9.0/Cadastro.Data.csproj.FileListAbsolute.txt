@@ -1,0 +1,16 @@
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\bin\Release\net9.0\Cadastro.Data.deps.json
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\bin\Release\net9.0\Cadastro.Data.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\bin\Release\net9.0\Cadastro.Data.pdb
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\bin\Release\net9.0\Cadastro.Domain.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\bin\Release\net9.0\Cadastro.Domain.pdb
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\Cadastro.Data.csproj.AssemblyReference.cache
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\Cadastro.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\Cadastro.Data.AssemblyInfoInputs.cache
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\Cadastro.Data.AssemblyInfo.cs
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\Cadastro.Data.csproj.CoreCompileInputs.cache
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\Cadastro.Data.sourcelink.json
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\Cadastro.118DFB5A.Up2Date
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\Cadastro.Data.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\refint\Cadastro.Data.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\Cadastro.Data.pdb
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.Data\obj\Release\net9.0\ref\Cadastro.Data.dll
