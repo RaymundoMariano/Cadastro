@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
-using System.Linq;
 using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Entities;
 using Cadastro.Domain.Extensions;
 using Cadastro.Domain.Contracts.UnitOfWorks;
+using ViaCep;
 
 namespace Cadastro.Service
 {
-    public class CepService(IUnitOfWork unitOfWork) : ICepService
+    public class CepService(IUnitOfWork unitOfWork, IViaCepClient viaCepClient) : ICepService
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IViaCepClient _viaCepClient = viaCepClient;
 
         #region ObterAsync
         public async Task<IEnumerable<Cep>> ObterAsync()
@@ -33,21 +34,19 @@ namespace Cadastro.Service
                 var Cep = await _unitOfWork.Ceps.ObterAsync(cep);
                 if (Cep != null)
                     return Cep;
-
-                var lCep = await new Correios.NET.CorreiosService().GetAddressesAsync(cep.ToString());
-                if (lCep.Count() == 0)
+                 
+                var result = _viaCepClient.Search(cep);
+                if (result is null)
                     throw new ServiceException($"Cep informado {cep} não foi encontrado!");
 
-                foreach (var eCep in lCep)
-                {
-                    Cep = new Cep();
-                    Cep.CEP = cep;
-                    Cep.Logradouro = eCep.Street;
-                    Cep.Bairro = eCep.District;
-                    Cep.Cidade = eCep.City;
-                    Cep.Uf = eCep.State;
-                    await InsereAsync(Cep);
-                }
+                Cep = new Cep() {
+                    CEP = cep,
+                    Logradouro = result.Street,
+                    Bairro = result.Neighborhood,
+                    Cidade = result.City,
+                    Uf = result.StateInitials
+                };
+                await InsereAsync(Cep);
                 return Cep;
             }
             catch (ServiceException) { throw; }

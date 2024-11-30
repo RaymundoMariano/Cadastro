@@ -47,7 +47,7 @@ namespace Cadastro.API.Controllers
                 {
                     Succeeded = true,
                     ObjectRetorno = pessoasModel,
-                    Errors = new List<string>()
+                    Errors = []
                 });
             }
             catch (Exception ex) { return Erro(ex.Message, false); }

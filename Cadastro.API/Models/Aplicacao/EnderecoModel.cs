@@ -8,8 +8,8 @@ namespace Cadastro.API.Models.Aplicacao
     {
         public EnderecoModel()
         {
-            Empresas = new HashSet<EmpresaModel>();
-            EnderecoPessoas = new HashSet<EnderecoPessoaModel>();
+            Empresas = [];
+            EnderecoPessoas = [];
         }
 
         [DisplayName("Id")]

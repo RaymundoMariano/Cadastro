@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
 {
@@ -11,12 +9,12 @@ namespace Cadastro.Data.EFC.Repositories
         protected readonly CadastroContextEFC _cadastroContext = cadastroContext;
 
         #region ObterAsync
-        public async Task<IEnumerable<T>> ObterAsync()
+        public virtual async Task<IEnumerable<T>> ObterAsync()
         {
             return await _cadastroContext.Set<T>().ToListAsync();
         }
 
-        public async Task<T> ObterAsync(int id)
+        public virtual async Task<T?> ObterAsync(int id)
         {
             return await _cadastroContext.Set<T>().FindAsync(id);
         }

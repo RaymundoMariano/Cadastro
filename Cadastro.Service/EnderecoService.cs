@@ -125,7 +125,7 @@ namespace Cadastro.Service
 
                             _unitOfWork.EnderecosPessoa.Remove(ep);
 
-                            await RemoveAsync(endereco.EnderecoId);
+                            _unitOfWork.Enderecos.Remove(endereco);
                             break;
 
                         default:

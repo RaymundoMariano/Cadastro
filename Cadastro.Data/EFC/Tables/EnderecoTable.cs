@@ -35,7 +35,7 @@ namespace Seguranca.Data.EFC.Tables
                 .IsUnicode(false);
 
             builder.Property(e => e.Numero)
-                .HasMaxLength(5)
+                .HasMaxLength(15)
                 .IsUnicode(false);
 
             builder.Property(e => e.Uf)

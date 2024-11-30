@@ -5,11 +5,10 @@ C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Cadastro.API.deps.json
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Cadastro.API.runtimeconfig.json
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Cadastro.API.pdb
-C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\AngleSharp.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\AutoMapper.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Azure.Core.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Azure.Identity.dll
-C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Correios.NET.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\System.Net.Http.Formatting.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
@@ -44,6 +43,7 @@ C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\System.Security.Cryptography.ProtectedData.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\System.Security.Permissions.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\System.Windows.Extensions.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\ViaCep.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Cadastro.Data.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Cadastro.Domain.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\linux-x64\PubTmp\Out\Cadastro.Service.dll

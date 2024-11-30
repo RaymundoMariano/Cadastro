@@ -8,8 +8,8 @@ namespace Cadastro.API.Models.Aplicacao
     {
         public EmpresaModel()
         {
-            Filiais = new HashSet<FilialModel>();
-            Socios = new HashSet<SocioModel>();
+            Filiais = [];
+            Socios = [];
         }
 
         [DisplayName("Id")]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Cadastro.Domain.Extensions
@@ -19,7 +20,35 @@ namespace Cadastro.Domain.Extensions
         {
             var ERegular = @"^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$";
 
-            return Regex.IsMatch(cpf, ERegular, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            var isValid = Regex.IsMatch(cpf, ERegular, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            if (!isValid) return isValid;
+
+            // Remover formatação e verificar comprimento
+            cpf = cpf.Replace(".", "").Replace("-", "");
+            if (cpf.Length != 11 || !cpf.All(char.IsDigit)) return false;
+
+            // Verificar se todos os dígitos são iguais
+            if (new string(cpf[0], 11) == cpf) return false;
+
+            // Calcular primeiro dígito verificador
+            int soma = 0;
+            for (int i = 0; i < 9; i++)
+            {
+                soma += int.Parse(cpf[i].ToString()) * (10 - i);
+            }
+            int primeiroDigitoVerificador = (soma * 10) % 11;
+            if (primeiroDigitoVerificador == 10) primeiroDigitoVerificador = 0;
+            if (primeiroDigitoVerificador != int.Parse(cpf[9].ToString())) return false;
+
+            // Calcular segundo dígito verificador
+            soma = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                soma += int.Parse(cpf[i].ToString()) * (11 - i);
+            }
+            int segundoDigitoVerificador = (soma * 10) % 11;
+            if (segundoDigitoVerificador == 10) segundoDigitoVerificador = 0;
+            return segundoDigitoVerificador == int.Parse(cpf[10].ToString());
         }
         #endregion
 

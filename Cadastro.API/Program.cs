@@ -17,6 +17,7 @@ using System;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using ViaCep;
 
 internal class Program
 {
@@ -50,6 +51,9 @@ internal class Program
         builder.Services.AddTransient<IEnderecoService, EnderecoService>();
         builder.Services.AddTransient<ICepService, CepService>();
         builder.Services.AddTransient<IEmpresaService, EmpresaService>();
+
+        //Serviço de Cep
+        builder.Services.AddHttpClient<IViaCepClient, ViaCepClient>(client => { client.BaseAddress = new Uri("https://viacep.com.br/"); });
 
         //Controllers protegidos contra acesso anônimo exceto as actions que tenham o atributo
         builder.Services.AddControllersWithViews(config =>

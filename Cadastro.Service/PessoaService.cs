@@ -1,6 +1,7 @@
 ﻿using Cadastro.Domain.Contracts.Services;
 using Cadastro.Domain.Contracts.UnitOfWorks;
 using Cadastro.Domain.Entities;
+using Cadastro.Domain.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Cadastro.Service
         {
             try
             {
-                return await _unitOfWork.Pessoas.GetFullAsync();
+                return await _unitOfWork.Pessoas.ObterAsync();
             }
             catch (Exception) { throw; }
         }
@@ -27,7 +28,7 @@ namespace Cadastro.Service
         {
             try
             {
-                var pessoa = await _unitOfWork.Pessoas.GetFullAsync(pessoaId);
+                var pessoa = await _unitOfWork.Pessoas.ObterAsync(pessoaId);
                 if (pessoa == null) throw new ServiceException(
                     $"Pessoa com {pessoaId} não foi encontrada");
 
@@ -45,6 +46,9 @@ namespace Cadastro.Service
             {
                 if (pessoa.Cpf != null)
                 {
+                    if (!pessoa.Cpf.CPFValido())
+                        throw new ServiceException($"Cpf inválido - {pessoa.Cpf}");
+
                     var pf = await _unitOfWork.PessoasFisicas.GetFullAsync(pessoa.Cpf);
 
                     if (pf != null) throw new ServiceException(
@@ -78,6 +82,9 @@ namespace Cadastro.Service
             {
                 if (pessoaId != pessoa.PessoaId) throw new ServiceException(
                     $"Id informado {pessoaId} é Diferente do Id da pessoa {pessoa.PessoaId}");
+
+                if (!pessoa.Cpf.CPFValido())
+                    throw new ServiceException($"Cpf inválido - {pessoa.Cpf}");
 
                 var pfOrigem = await _unitOfWork.PessoasFisicas.GetFullAsync(pessoaId);
 

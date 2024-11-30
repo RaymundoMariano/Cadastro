@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Correios.NET" Version="1.4.4" />
+    <PackageReference Include="ViaCep" Version="4.1.511" />
   </ItemGroup>
 
   <ItemGroup>

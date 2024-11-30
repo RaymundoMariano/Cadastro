@@ -1,8 +1,6 @@
 ﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
 {
@@ -18,7 +16,7 @@ namespace Cadastro.Data.EFC.Repositories
                     .ToListAsync();
         }
 
-        public async Task<PessoaFisica> GetFullAsync(string cpf)
+        public async Task<PessoaFisica?> GetFullAsync(string cpf)
         {
             return await _cadastroContext.PessoaFisicas
                 .AsNoTracking()
@@ -27,7 +25,7 @@ namespace Cadastro.Data.EFC.Repositories
                 .FirstOrDefaultAsync(p => p.Cpf == cpf);
         }
 
-        public async Task<PessoaFisica> GetFullAsync(int pessoaId)
+        public async Task<PessoaFisica?> GetFullAsync(int pessoaId)
         {
             return await _cadastroContext.PessoaFisicas
                 .AsNoTracking()

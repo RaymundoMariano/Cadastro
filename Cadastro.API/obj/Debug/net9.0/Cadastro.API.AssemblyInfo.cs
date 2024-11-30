@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Cadastro.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bda352c6b5308a56e6bdbe94e99b2f21875cb03f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+33b3e7b0ec593b12ef545e5c4efc1e8d5d6a3235")]
 [assembly: System.Reflection.AssemblyProductAttribute("Cadastro.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Cadastro.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,8 +1,6 @@
 ﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
 {
@@ -17,7 +15,7 @@ namespace Cadastro.Data.EFC.Repositories
                     .ToListAsync();
         }
 
-        public async Task<Filial> GetFullAsync(int filialId)
+        public async Task<Filial?> GetFullAsync(int filialId)
         {
             return await _cadastroContext.Filiais
                     .AsNoTracking()
@@ -25,7 +23,7 @@ namespace Cadastro.Data.EFC.Repositories
                     .FirstOrDefaultAsync(p => p.FilialId == filialId);
         }
 
-        public async Task<Filial> GetFullAsync(string cgc)
+        public async Task<Filial?> GetFullAsync(string cgc)
         {
             return await _cadastroContext.Filiais
                     .AsNoTracking()

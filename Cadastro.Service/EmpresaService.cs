@@ -18,7 +18,7 @@ namespace Cadastro.Service
         {
             try
             {
-                return await _unitOfWork.Empresas.GetFullAsync();
+                return await _unitOfWork.Empresas.ObterAsync();
             }
             catch (Exception) { throw; }
         }
@@ -27,7 +27,7 @@ namespace Cadastro.Service
         {
             try
             {
-                var empresa = await _unitOfWork.Empresas.GetFullAsync(empresaId);
+                var empresa = await _unitOfWork.Empresas.ObterAsync(empresaId);
 
                 if (empresa == null) throw new ServiceException(
                     $"Empresa com Id {empresaId} não foi encontrada");

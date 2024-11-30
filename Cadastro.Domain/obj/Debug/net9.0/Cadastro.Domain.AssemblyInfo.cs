@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("Cadastro.Service")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Cadastro.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+33b3e7b0ec593b12ef545e5c4efc1e8d5d6a3235")]
-[assembly: System.Reflection.AssemblyProductAttribute("Cadastro.Service")]
-[assembly: System.Reflection.AssemblyTitleAttribute("Cadastro.Service")]
+[assembly: System.Reflection.AssemblyProductAttribute("Cadastro.Domain")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Cadastro.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.

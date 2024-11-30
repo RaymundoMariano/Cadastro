@@ -6,11 +6,9 @@ C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Cadastro.A
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Cadastro.API.runtimeconfig.json
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Cadastro.API.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Cadastro.API.pdb
-C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\AngleSharp.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\AutoMapper.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Azure.Core.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Azure.Identity.dll
-C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Correios.NET.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
@@ -88,3 +86,5 @@ C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\refint\Cad
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\Cadastro.API.pdb
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\Cadastro.API.genruntimeconfig.cache
 C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\obj\Release\net9.0\ref\Cadastro.API.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\System.Net.Http.Formatting.dll
+C:\Users\gledi\source\GitHub\Cadastro\Cadastro.API\bin\Release\net9.0\ViaCep.dll

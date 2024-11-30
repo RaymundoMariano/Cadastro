@@ -1,8 +1,6 @@
 ﻿using Cadastro.Domain.Contracts.Repositories;
 using Cadastro.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Cadastro.Data.EFC.Repositories
 {
@@ -18,7 +16,7 @@ namespace Cadastro.Data.EFC.Repositories
                     .ToListAsync();
         }
 
-        public async Task<Endereco> GetFullAsync(int enderecoId)
+        public async Task<Endereco?> GetFullAsync(int enderecoId)
         {
             return await _cadastroContext.Enderecos
                     .AsNoTracking()

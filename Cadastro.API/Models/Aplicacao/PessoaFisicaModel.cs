@@ -7,7 +7,7 @@ namespace Cadastro.API.Models.Aplicacao
     {
         public PessoaFisicaModel()
         {
-            Socios = new HashSet<SocioModel>();
+            Socios = [];
         }
 
         [DisplayName("Id")]
